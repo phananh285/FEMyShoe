@@ -1,0 +1,19 @@
+/* src/assets/css/ProductCard.css */
+.product-card {
+    border: 1px solid #ccc; /* Light border */
+    border-radius: 8px; /* Rounded corners */
+    padding: 16px; /* Inner padding */
+    background: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    transition: transform 0.2s; /* Smooth transition */
+}
+
+.product-card:hover {
+    transform: scale(1.02); /* Slightly enlarge on hover */
+}
+
+.product-image {
+    width: 100%; /* Responsive image */
+    height: auto; /* Maintain aspect ratio */
+    border-radius: 8px; /* Rounded corners for image */
+}

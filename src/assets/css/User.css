@@ -1,0 +1,37 @@
+/* src/assets/css/ProductsPage.css */
+.products-page {
+    padding: 20px; /* Add some padding to the page */
+}
+
+.header {
+    display: flex; /* Use flexbox for alignment */
+    justify-content: space-between; /* Space between title and button */
+    align-items: center; /* Center items vertically */
+    margin-bottom: 20px; /* Space below the header */
+}
+
+.add-product-btn {
+    background-color: #007bff; /* Button background color */
+    color: white; /* Text color */
+    border: none; /* Remove border */
+    padding: 10px 15px; /* Padding for the button */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s; /* Smooth background transition */
+}
+
+.add-product-btn:hover {
+    background-color: #0056b3; /* Darker shade on hover */
+}
+
+.product-grid {
+    display: grid; /* Use grid for product layout */
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Responsive grid */
+    gap: 20px; /* Space between products */
+}
+
+.pagination {
+    display: flex; /* Flexbox for pagination */
+    justify-content: center; /* Center pagination buttons */
+    margin-top: 20px; /* Space above pagination */
+}
