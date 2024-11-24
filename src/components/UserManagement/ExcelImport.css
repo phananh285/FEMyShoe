@@ -1,0 +1,17 @@
+.excel-import {
+    margin: 20px 0;
+    padding: 20px;
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.excel-input {
+    margin-bottom: 10px;
+}
+
+.import-help {
+    color: #666;
+    font-size: 0.9em;
+    margin: 5px 0;
+}
