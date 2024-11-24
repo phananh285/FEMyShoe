@@ -1,11 +1,35 @@
 import React, { useEffect, useState } from 'react';
 import * as d3 from 'd3';
+import axios from 'axios';
 
 const RevenueChart = () => {
   // State để lưu trữ dữ liệu từ backend
   const [revenueData, setRevenueData] = useState([]);
+ 
 
+  /*useEffect(() => {
+    const fetchRevenueData = async () => {
+      try {
+        // Gọi API để lấy dữ liệu từ backend
+        const response = await axios.get('/api/revenue'); // Thay đổi URL này theo API của bạn
+        setRevenueData(response.data); // Giả sử dữ liệu trả về có dạng [{ date: '2024-01', revenue: 50000000 }, ...]
+      } catch (error) {
+        console.error('Error fetching revenue data:', error);
+      }
+    };
+
+    fetchRevenueData(); // Gọi hàm fetchRevenueData
+  }, []);*/
   useEffect(() => {
+    const fetchRevenueData = async()=>{
+      try{
+        const respone = await axios.get('api');
+        setRevenueData(response.data); 
+      } catch(error){
+        console.error('Error fetching data revenue',error);
+      }
+    };
+    fetchRevenueData();
     // TODO: Gọi API để lấy dữ liệu từ backend
     // Ví dụ cấu trúc data từ backend:
     // {

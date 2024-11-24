@@ -54,7 +54,7 @@ const routes = [
       {
         exact: 'true',
         path: '/app/dashboard/default',
-        element: lazy(() => import('./views/dashboard'))
+        element: lazy(() => import('./views/extra/XuHuong'))
       },
       {
         exact: 'true',
@@ -113,19 +113,15 @@ const routes = [
       },
       {
         exact: 'true',
-        path: '/XoaNguoiDung',
-        element: lazy(() => import('./views/extra/XoaNguoiDung'))
-      },
-      {
-        exact: 'true',
         path: '/sample-page',
         element: lazy(() => import('./views/extra/SamplePage'))
       },
-       {
+      {
         exact: 'true',
-        path: '/XoaSanPham',
-        element: lazy(() => import('./views/extra/XoaSanPham'))
+        path: '/UserManagement',
+        element: lazy(() => import('./views/extra/QlNguoiDung'))
       },
+
       {
         path: '*',
         exact: 'true',

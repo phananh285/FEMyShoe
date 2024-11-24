@@ -1,7 +1,6 @@
 import React from 'react';
 import { Row, Col } from 'react-bootstrap';
-import Sidebar from '../../components/SideBar';
-import ProductsPage from '../../components/CategoryPage';
+import ProductsPage from '../../components/ProductManagement/ProductManagement.jsx';
 import Card from '../../components/Card/MainCard';
 
 const SamplePage = () => {
@@ -9,7 +8,7 @@ const SamplePage = () => {
     <React.Fragment>
       <Row>
         <Col>
-          <Card title="Thêm danh mục" isOption>
+          <Card title="Quản lý sản phẩm" isOption>
            
             <ProductsPage/>
             <p>
