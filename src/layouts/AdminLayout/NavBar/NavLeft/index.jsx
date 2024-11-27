@@ -13,7 +13,7 @@ const NavLeft = () => {
     navItemClass = [...navItemClass, 'd-none'];
   }
 
-  return (
+ /* return (
     <React.Fragment>
       <ListGroup as="ul" bsPrefix=" " className="navbar-nav mr-auto">
         <ListGroup.Item as="li" bsPrefix=" " className={navItemClass.join(' ')}>
@@ -47,7 +47,7 @@ const NavLeft = () => {
         </ListGroup.Item>
       </ListGroup>
     </React.Fragment>
-  );
+  );*/
 };
 
 export default NavLeft;

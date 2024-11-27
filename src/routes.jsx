@@ -121,7 +121,11 @@ const routes = [
         path: '/UserManagement',
         element: lazy(() => import('./views/extra/QlNguoiDung'))
       },
-
+      {
+        exact: 'true',
+        path: '/OrderCheck',
+        element: lazy(() => import('./views/extra/OrderCheck'))
+      },
       {
         path: '*',
         exact: 'true',

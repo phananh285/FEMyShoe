@@ -55,6 +55,14 @@ const menuItems = {
           classes: 'nav-item',
           icon: 'feather icon-sidebar'
         },
+        {
+          id: 'OrderCheck',
+          title: 'Xem danh sách đơn hàng',
+          type: 'item',
+          url: '/OrderCheck',
+          classes: 'nav-item',
+          icon: 'feather icon-sidebar'
+        },
 
       ]
     }
