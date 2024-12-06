@@ -55,7 +55,7 @@ const ProductForm = () => {
         
       >
         <Form.Item
-          label="Tên người dùng"
+          label="Tên sản phẩm"
           name="productName"
           rules={[{ required: true, message: 'Vui lòng nhập tên sản phẩm!' }]}
         >

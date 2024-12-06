@@ -63,7 +63,22 @@ const menuItems = {
           classes: 'nav-item',
           icon: 'feather icon-sidebar'
         },
-
+        {
+          id: 'CategoryManagement',
+          title: 'Quản lý danh mục',
+          type: 'item',
+          url: '/CategoryManagement',
+          classes: 'nav-item',
+          icon: 'feather icon-sidebar'
+        },
+        {
+          id: 'ProductStat',
+          title: 'Thống kê số lượng bán ra',
+          type: 'item',
+          url: '/ProductStat',
+          classes: 'nav-item',
+          icon: 'feather icon-sidebar'
+        },
       ]
     }
   ]

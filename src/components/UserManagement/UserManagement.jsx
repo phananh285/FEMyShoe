@@ -1,41 +1,70 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { Button, Modal, Form, Table } from 'react-bootstrap';
 import MainCard from '../Card/MainCard';
 import './ProductManagement.css';
-import ProductForm from './ProductForm.jsx';
-import ProductEdit from './ProductEdit.jsx';
+import UserForm from './UserForm.jsx';
+import UserEdit from './UserEdit.jsx';
 const ProductManagement = () => {
-  const [showModal, setShowModal] = useState(false);
-  const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedProduct, setSelectedProduct] = useState(null);
   const [show, setShow] = useState(false)
-  const [showModalSua, setShowModalSua] = useState(false);
   const [showSua, setShowSua] = useState(false)
   // Sample data - replace with your actual data source
-  const [Users, setUser] = useState([
-    { STT: 1, name: 'user 1', hoten: 'B', email: "email",phongbanchinh:"abcd" },
-    { STT: 2, name: 'user 2', hoten: 'BA', email: "email",phongbanchinh:"abcd2" },
+  const [products, setProducts] = useState([
+    { id: 1, name: 'Product 1', category: 'Category A', price: 100,  phongban: "mua ban",loaisp:"abc" },
+    { id: 2, name: 'Product 2', category: 'Category B', price: 200,  phongban: "mua ban",loaisp:"abcd" },
   ]);
+  useEffect(() => {
+    const fetchPro = async () => {
+      const apiUrl = '/api/jobs?_limit=3';
+      try {
+        const res = await fetch(apiUrl);
+        const data = await res.json();
+        setPro(data);
+      } catch (error) {
+        console.log('Error fetching data', error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const handleShowModal = (User) => {
+    fetchPro();
+  }, []);
+  const addUser= async (newPro) => {
+    const res = await fetch('/api/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newPro),
+    });
+    return;
+  };
+
+  // Delete 
+  const deleteUser = async (id) => {
+    const res = await fetch(`/api//${id}`, {
+      method: 'DELETE',
+    });
+    return;
+  };
+
+  // Update 
+  const updateUser = async (product) => {
+    const res = await fetch(`/api/${product.id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(product.id),
+    });
+    return;
+  };
+  const handleShowModal = () => {
     setShow(true);
-    setShowModal(true)
+  };
+
+  const handleShowModalSua = () => {
     setShowSua(true);
-    setShowModalSua(true);
-    setSelectedUser(User)
-  };
-  const handleCloseModal = () => {
-    setShow(false);
-    setShowModal(false)
-  };
-  const handleShowModalSua = (User = null) => {
-    setShowSua(true);
-    setShowModalSua(true);
-    setSelectedProduct(product)
-  };
-  const handleCloseModalSua = () => {
-    setShowSua(false);
-    setShowModalSua(false);
-    setSelectedProduct(null)
   };
 
   const handleFileImport = (event) => {
@@ -43,22 +72,8 @@ const ProductManagement = () => {
     // Implement Excel file import logic here
     console.log('Importing file:', file);
   };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    // Implement add/edit logic here
-    handleCloseModal();
-  };
-
-  const handleDelete = (productId) => {
-    // Implement delete logic here
-    const updatedProducts = products.filter(product => product.id !== productId);
-    setProducts(updatedProducts);
-  };
-
   return (
-    
-    <MainCard title="Quản lý Người dùng">
+    <MainCard title="Quản lý người dùng">
       <div className="product-management">
         <div className="management-header">
           <div className="management-actions">
@@ -66,16 +81,8 @@ const ProductManagement = () => {
               className="action-button add-button"
               onClick={() => handleShowModal()}>
               <i className="feather icon-plus"  />
-              Thêm người dùng
+              Thêm Người Dùng
             </Button>
-          <Modal show={showModal} onHide={handleCloseModal} centered>
-        <Modal.Header closeButton> 
-        </Modal.Header>
-        <Modal.Body>
-         <ProductForm show={show} setShow = {setShow}/>
-        </Modal.Body>
-      </Modal>
-           
             <label className="action-button import-button" style={{ margin: 0 }}>
               <i className="feather icon-upload" />
               Import Excel
@@ -88,46 +95,50 @@ const ProductManagement = () => {
             </label>
           </div>
         </div>
-
+        {show && (
+          <UserForm
+            show={show}
+            setShow={setShow}
+            addUser={addUser}
+          />
+        )}
         <Table responsive className="product-table">
           <thead>
             <tr>
-              <th className='text'>STT</th>
-              <th>Tên đăng nhập </th>
-              <th>Họ và tên</th>
-              <th>email</th>
-              <th>Phòng ban chính</th>
+              <th className='text'>Mã sản phẩm</th>
+              <th>Tên sản phẩm</th>
+              <th>Danh mục</th>
+              <th>Giá</th>
+              <th>Phòng ban</th>
+              <th>Loại sản phẩm</th>
               <th>Thao tác</th>
             </tr>
           </thead>
           <tbody>
-            {Users.map((User) => (
-              <tr key={User.STT}>
-                <td>{User.STT}</td>
-                <td>{User.name}</td>
-                <td>{User.hoten}</td>
-                <td>{User.email}</td>
-                <td>{User.phongbanchinh}</td>
+            {products.map((product) => (
+              <tr key={product.id}>
+                <td>{product.id}</td>
+                <td>{product.name}</td>
+                <td>{product.description}</td>
+                <td>{product.price}</td>
+                <td>{product.category_id}</td>
+                <td>{product.create_at}</td>
+                <td>{product.updated_at}</td>
                 <td className="action-cell">
                   <button
                     className="edit-btn"
-                    onClick={(product) => handleShowModal(product)} >
+                    onClick={() => handleShowModalSua()} >
                     <i className="feather icon-edit-2" />
                     Sửa
-                  </button>
-                  <Modal showSua={showModalSua} onHide={handleCloseModalSua} centered>
-        <Modal.Header closeButton> 
-        </Modal.Header>
-        <Modal.Body>
-         <ProductEdit showSua={showSua} setShowSua = {setShowSua}/>
-        </Modal.Body>
-      </Modal>
-                  <button
+                  </button>      
+         {showSua && (<UserEdit showSua={showSua} setShowSua={setShowSua} selectedUser={product.id} UpdateUser={updateUser}/>)}
+   
+                    <button
                     className="delete-btn"
-                    onClick={() => handleDelete(product.id)}
+                    onClick={() => deleteUser(product.id)}
                   >
                     <i className="feather icon-trash-2" />
-                    Xóa
+                    Khóa
                   </button>
                 </td>
               </tr>

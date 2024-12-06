@@ -2,8 +2,8 @@ import React, { useState,useEffect } from 'react';
 import { Button, Modal, Form, Table } from 'react-bootstrap';
 import MainCard from '../Card/MainCard';
 import './ProductManagement.css';
-import ProductForm from './ProductForm.jsx';
-import ProductEdit from './ProductEdit.jsx';
+import CategoryForm from './CategoryForm.jsx';
+import CategoryEdit from './CategoryEdit.jsx';
 const ProductManagement = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [show, setShow] = useState(false)
@@ -29,7 +29,7 @@ const ProductManagement = () => {
 
     fetchPro();
   }, []);
-  const addPro= async (newPro) => {
+  const addCategory= async (newPro) => {
     const res = await fetch('/api/', {
       method: 'POST',
       headers: {
@@ -41,7 +41,7 @@ const ProductManagement = () => {
   };
 
   // Delete 
-  const deletePro = async (id) => {
+  const deleteCategory = async (id) => {
     const res = await fetch(`/api//${id}`, {
       method: 'DELETE',
     });
@@ -49,7 +49,7 @@ const ProductManagement = () => {
   };
 
   // Update 
-  const updatePro = async (product) => {
+  const updateCategory = async (product) => {
     const res = await fetch(`/api/${product.id}`, {
       method: 'PUT',
       headers: {
@@ -81,7 +81,7 @@ const ProductManagement = () => {
               className="action-button add-button"
               onClick={() => handleShowModal()}>
               <i className="feather icon-plus"  />
-              Thêm sản phẩm
+              Thêm danh mục
             </Button>
             <label className="action-button import-button" style={{ margin: 0 }}>
               <i className="feather icon-upload" />
@@ -96,10 +96,10 @@ const ProductManagement = () => {
           </div>
         </div>
         {show && (
-          <ProductForm
+          <CategoryForm
             show={show}
             setShow={setShow}
-            addProduct={addPro}
+            addCategory={addCategory}
           />
         )}
         <Table responsive className="product-table">
@@ -131,7 +131,7 @@ const ProductManagement = () => {
                     <i className="feather icon-edit-2" />
                     Sửa
                   </button>      
-         {showSua && (<ProductEdit showSua={showSua} setShowSua={setShowSua} selectedProduct={product.id} UpdateProduct={updatePro}/>)}
+         {showSua && (<CategoryEdit showSua={showSua} setShowSua={setShowSua} selectedCategory={product.id} updateCategory={updateCategory}/>)}
    
                     <button
                     className="delete-btn"

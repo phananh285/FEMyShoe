@@ -54,7 +54,7 @@ const routes = [
       {
         exact: 'true',
         path: '/app/dashboard/default',
-        element: lazy(() => import('./views/extra/XuHuong'))
+        element: lazy(() => import('./views/extra/ProductAmount'))
       },
       {
         exact: 'true',
@@ -125,6 +125,16 @@ const routes = [
         exact: 'true',
         path: '/OrderCheck',
         element: lazy(() => import('./views/extra/OrderCheck'))
+      },
+      {
+        exact: 'true',
+        path: '/ProductStat',
+        element: lazy(() => import('./views/extra/ProductAmount'))
+      },
+      {
+        exact: 'true',
+        path: '/CategoryManagement',
+        element: lazy(() => import('./views/extra/CategoryManagement'))
       },
       {
         path: '*',

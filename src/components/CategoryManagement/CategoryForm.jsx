@@ -1,50 +1,47 @@
 import React, { useState } from 'react';
 import { Form, Input, Select, Button, Upload, message, Modal} from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-const ProductEdit = ({selectedProduct, UpdateProduct,showSua,setShowSua}) => {
+
+
+const CategoryForm = ({addCategory,show,setShow}) => {
+  const [form] = Form.useForm();
   const [imageList, setImageList] = useState([]);
-  const [id, setid] = useState(selectedProduct);
+  const [id, setid] = useState('');
   const [name, setname] = useState('');
   const [description, setDescription] = useState('');
-  const [price, setPrice] = useState('');
-  const [category_id,setCategoryid]=useState('');
   const [created_at,setCreatedate] = useState('');
-  const [updated_at,setUpdateddate] = useState('');
-  const [form] = Form.useForm();
+  const [updated_at, setUpdateddate] = useState('');
   const [categoríes,setCategory]=useState([
     {id:1,name:'Category 1'},
     {id:2,name:'Cate2'}
   ]);
-  console.log('Selected Product:', id);     
-
   const { Option } = Select;
   // Xử lý upload ảnh
-  // const handleImageUpload = ({ fileList }) => {
-  //   setImageList(fileList);
-  //   if (fileList.length > 0) {
-  //     message.success(`Đã tải lên ${fileList.length} ảnh thành công`);
-  //   }
-  // };
+  const handleImageUpload = ({ fileList }) => {
+    setImageList(fileList);
+    if (fileList.length > 0) {
+      message.success(`Đã tải lên ${fileList.length} ảnh thành công`);
+    }
+  };
   const handleCancel = () => {
     form.resetFields();
-    setShowSua(false);
+    setShow(false);
   };
 
   const submitForm = (e) => {
     e.preventDefault();
 
-    const updateProduct = {
+    const newProduct = {
       id,
       name,
       description,
-      price,
-      category_id,
       created_at,
       updated_at,
     };
 
-    UpdateProduct(updateProduct);
-    setShowSua(false);
+    addCategory(newProduct);
+    setShow(false);
+
   };
 
   // useEffect(() => {
@@ -65,7 +62,7 @@ const ProductEdit = ({selectedProduct, UpdateProduct,showSua,setShowSua}) => {
   // }, []);
 
   return (
-    <Modal  open={showSua}
+    <Modal  open={show}
             onCancel={handleCancel}
             footer={null}
     >
@@ -74,31 +71,6 @@ const ProductEdit = ({selectedProduct, UpdateProduct,showSua,setShowSua}) => {
         layout="vertical"
         onFinish={submitForm}
       >
-         <Form.Item
-          label="Mã sản phẩm"
-          name="productName"
-          rules={[{ required: true, message: 'Vui lòng nhập Mã sản phẩm!' }]}
-        >
-          <Input value={id} onChange={(e) => setid(e.target.value)} />
-        </Form.Item>
-        <Form.Item
-          label="Tên sản phẩm"
-          name="productName"
-          rules={[{ required: true, message: 'Vui lòng nhập tên sản phẩm!' }]}
-        >
-          <Input value={name} onChange={(e) => setname(e.target.value)} />
-        </Form.Item>
-
-        <Form.Item
-          label="Giá sản phẩm"
-          name="price"
-          rules={[
-            { required: true, message: 'Vui lòng nhập giá sản phẩm!' },
-         
-          ]}
-        >
-          <Input value={price}  onChange={(e) => setPrice(e.target.value)} />
-        </Form.Item>
 
 
         {/* <Form.Item
@@ -136,14 +108,6 @@ const ProductEdit = ({selectedProduct, UpdateProduct,showSua,setShowSua}) => {
           
           <Input />
         </Form.Item> */}
-
-        <Form.Item
-          label="Mô tả"
-          name="descripton"
-        >
-      
-          <Input value={description} onChange={(e) => setDescription(e.target.value)} />
-        </Form.Item>
         <Form.Item
         label="Danh mục"
         name="category"
@@ -160,6 +124,14 @@ const ProductEdit = ({selectedProduct, UpdateProduct,showSua,setShowSua}) => {
           ))}
         </Select>
       </Form.Item>
+        <Form.Item
+          label="Mô tả"
+          name="descripton"
+        >
+      
+          <Input value={description} onChange={(e) => setDescription(e.target.value)} />
+        </Form.Item>
+
         
         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
           <Button onClick={handleCancel}>Hủy</Button>
@@ -171,4 +143,4 @@ const ProductEdit = ({selectedProduct, UpdateProduct,showSua,setShowSua}) => {
   );
 };
 
-export default ProductEdit;
+export default CategoryForm;

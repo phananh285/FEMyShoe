@@ -1,16 +1,15 @@
 import React from 'react';
 import { Row, Col } from 'react-bootstrap';
-import UserPage from '../../components/CheckOrder/OrderManagement';
 import Card from '../../components/Card/MainCard.jsx';
-
+import CategoryManagement from '../../components/CategoryManagement/CategoryManagement.jsx'
 const SamplePage = () => {
   return (
     <React.Fragment>
       <Row>
         <Col>
-          <Card title="Danh sách đơn hàng" isOption>
+          <Card title="Quản lý danh mục" isOption>
            
-            <UserPage/>
+            <CategoryManagement/>
             <p>
               
             </p>

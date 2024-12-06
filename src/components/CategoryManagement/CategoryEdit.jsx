@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import { Form, Input, Select, Button, Upload, message, Modal} from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-const ProductEdit = ({selectedProduct, UpdateProduct,showSua,setShowSua}) => {
-  const [imageList, setImageList] = useState([]);
-  const [id, setid] = useState(selectedProduct);
+const ProductEdit = ({selectedCategory, updateCategory,showSua,setShowSua}) => {
+  // const [imageList, setImageList] = useState([]);
+  const [id, setid] = useState(selectedCategory);
   const [name, setname] = useState('');
   const [description, setDescription] = useState('');
-  const [price, setPrice] = useState('');
-  const [category_id,setCategoryid]=useState('');
   const [created_at,setCreatedate] = useState('');
   const [updated_at,setUpdateddate] = useState('');
   const [form] = Form.useForm();
@@ -33,17 +31,15 @@ const ProductEdit = ({selectedProduct, UpdateProduct,showSua,setShowSua}) => {
   const submitForm = (e) => {
     e.preventDefault();
 
-    const updateProduct = {
+    const updatecategory = {
       id,
       name,
       description,
-      price,
-      category_id,
       created_at,
       updated_at,
     };
 
-    UpdateProduct(updateProduct);
+    updateCategory(updatecategory);
     setShowSua(false);
   };
 
@@ -74,77 +70,7 @@ const ProductEdit = ({selectedProduct, UpdateProduct,showSua,setShowSua}) => {
         layout="vertical"
         onFinish={submitForm}
       >
-         <Form.Item
-          label="Mã sản phẩm"
-          name="productName"
-          rules={[{ required: true, message: 'Vui lòng nhập Mã sản phẩm!' }]}
-        >
-          <Input value={id} onChange={(e) => setid(e.target.value)} />
-        </Form.Item>
-        <Form.Item
-          label="Tên sản phẩm"
-          name="productName"
-          rules={[{ required: true, message: 'Vui lòng nhập tên sản phẩm!' }]}
-        >
-          <Input value={name} onChange={(e) => setname(e.target.value)} />
-        </Form.Item>
-
-        <Form.Item
-          label="Giá sản phẩm"
-          name="price"
-          rules={[
-            { required: true, message: 'Vui lòng nhập giá sản phẩm!' },
-         
-          ]}
-        >
-          <Input value={price}  onChange={(e) => setPrice(e.target.value)} />
-        </Form.Item>
-
-
-        {/* <Form.Item
-          label="Thêm ảnh"
-          name="images"
-        >
-          <Upload
-            listType="picture"
-            multiple
-            onChange={handleImageUpload}
-            beforeUpload={() => false}
-          >
-            <Button icon={<UploadOutlined />}>Chọn ảnh</Button>
-          </Upload>
-        </Form.Item> */}
-
-        {/* <Form.Item
-          label="Ảnh mặc định"
-          name="defaultImage"
-        >
-          <Select>
-            {imageList.map((file, index) => (
-              <Option key={index} value={file.name}>
-                {file.name}
-              </Option>
-            ))}
-          </Select>
-        </Form.Item> */}
-
-        {/* <Form.Item
-          label="Màu sắc"
-          name="color"
-       
-        >
-          
-          <Input />
-        </Form.Item> */}
-
-        <Form.Item
-          label="Mô tả"
-          name="descripton"
-        >
-      
-          <Input value={description} onChange={(e) => setDescription(e.target.value)} />
-        </Form.Item>
-        <Form.Item
+                <Form.Item
         label="Danh mục"
         name="category"
         rules={[{ required: true, message: 'Vui lòng chọn danh mục!' }]}
@@ -160,6 +86,14 @@ const ProductEdit = ({selectedProduct, UpdateProduct,showSua,setShowSua}) => {
           ))}
         </Select>
       </Form.Item>
+        <Form.Item
+          label="Mô tả"
+          name="descripton"
+        >
+      
+          <Input value={description} onChange={(e) => setDescription(e.target.value)} />
+        </Form.Item>
+
         
         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
           <Button onClick={handleCancel}>Hủy</Button>

@@ -1,50 +1,54 @@
 import React, { useState } from 'react';
 import { Form, Input, Select, Button, Upload, message, Modal} from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-const ProductEdit = ({selectedProduct, UpdateProduct,showSua,setShowSua}) => {
-  const [imageList, setImageList] = useState([]);
-  const [id, setid] = useState(selectedProduct);
-  const [name, setname] = useState('');
-  const [description, setDescription] = useState('');
-  const [price, setPrice] = useState('');
-  const [category_id,setCategoryid]=useState('');
-  const [created_at,setCreatedate] = useState('');
-  const [updated_at,setUpdateddate] = useState('');
+
+
+const UserForm = ({addUser,show,setShow}) => {
   const [form] = Form.useForm();
+  const [password, setPassword] = useState([]);
+  const [id, setid] = useState('');
+  const [username, setUsername] = useState('');
+  const [full_name, setFullname] = useState('');
+  const [address, setAddress] = useState('');
+  const [phone_number, setPhone_number] = useState('');
+  const [email,setEmail]=useState('');
+  const [created_at,setCreatedate] = useState('');
+  const [updated_at, setUpdateddate] = useState('');
   const [categoríes,setCategory]=useState([
     {id:1,name:'Category 1'},
     {id:2,name:'Cate2'}
   ]);
-  console.log('Selected Product:', id);     
-
   const { Option } = Select;
   // Xử lý upload ảnh
-  // const handleImageUpload = ({ fileList }) => {
-  //   setImageList(fileList);
-  //   if (fileList.length > 0) {
-  //     message.success(`Đã tải lên ${fileList.length} ảnh thành công`);
-  //   }
-  // };
+  const handleImageUpload = ({ fileList }) => {
+    setImageList(fileList);
+    if (fileList.length > 0) {
+      message.success(`Đã tải lên ${fileList.length} ảnh thành công`);
+    }
+  };
   const handleCancel = () => {
     form.resetFields();
-    setShowSua(false);
+    setShow(false);
   };
 
   const submitForm = (e) => {
     e.preventDefault();
 
-    const updateProduct = {
-      id,
-      name,
-      description,
-      price,
-      category_id,
+    const newuser = {
+
+      username,
+      password,
+      email,
+      full_name,
+      address,
+      phone_number,
       created_at,
       updated_at,
     };
 
-    UpdateProduct(updateProduct);
-    setShowSua(false);
+    addUser(newuser);
+    setShow(false);
+
   };
 
   // useEffect(() => {
@@ -65,7 +69,7 @@ const ProductEdit = ({selectedProduct, UpdateProduct,showSua,setShowSua}) => {
   // }, []);
 
   return (
-    <Modal  open={showSua}
+    <Modal  open={show}
             onCancel={handleCancel}
             footer={null}
     >
@@ -75,9 +79,9 @@ const ProductEdit = ({selectedProduct, UpdateProduct,showSua,setShowSua}) => {
         onFinish={submitForm}
       >
          <Form.Item
-          label="Mã sản phẩm"
+          label="Tên người dùng"
           name="productName"
-          rules={[{ required: true, message: 'Vui lòng nhập Mã sản phẩm!' }]}
+          rules={[{ required: true, message: 'Vui lòng nhập tên người dùng' }]}
         >
           <Input value={id} onChange={(e) => setid(e.target.value)} />
         </Form.Item>
@@ -171,4 +175,4 @@ const ProductEdit = ({selectedProduct, UpdateProduct,showSua,setShowSua}) => {
   );
 };
 
-export default ProductEdit;
+export default UserForm;

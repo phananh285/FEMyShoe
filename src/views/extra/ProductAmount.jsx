@@ -1,6 +1,6 @@
 import React from 'react';
 import { Row, Col } from 'react-bootstrap';
-import UserPage from '../../components/CheckOrder/OrderManagement';
+import UserPage from '../../components/ProductStat/ProductStat.jsx';
 import Card from '../../components/Card/MainCard.jsx';
 
 const SamplePage = () => {
@@ -8,7 +8,7 @@ const SamplePage = () => {
     <React.Fragment>
       <Row>
         <Col>
-          <Card title="Danh sách đơn hàng" isOption>
+          <Card title="Thống kê số lượng" isOption>
            
             <UserPage/>
             <p>
