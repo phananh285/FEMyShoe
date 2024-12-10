@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Modal, Form, Table } from 'react-bootstrap';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import MainCard from '../Card/MainCard';
 import './ProductManagement.css';
 import { FaCalendarAlt } from 'react-icons/fa';
+
 const ProductManagement = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -20,6 +21,22 @@ const ProductManagement = () => {
     { id: 2, name: 'Product 2', category: 'Category B', price: 200, phongban: "mua ban", loaisp: "abcd" },
   ]);
 
+  useEffect((startDate,endDate) => {
+    const fetchPro = async () => {
+      const apiUrl = '';
+      try {
+        const res = await fetch(apiUrl);
+        const data = await res.json();
+        setPro(data);
+      } catch (error) {
+        console.log('Error fetching data', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPro();
+  }, []);
   return (
     <MainCard title="Thống kê">
       <div className="product-management">
@@ -38,7 +55,7 @@ const ProductManagement = () => {
         <FaCalendarAlt className="date-picker-icon" />
       </div>
     </div>
-    <span className="date-separator"/>
+    
     <div className="date-picker-group">
       <label>Ngày kết thúc:</label>
       <div className="date-picker-wrapper">
@@ -50,13 +67,17 @@ const ProductManagement = () => {
         />
         <FaCalendarAlt className="date-picker-icon" />
       </div>
+    
     </div>
   </div>
+
   <Button variant="primary" className="statistic-button">
     Thống kê
   </Button>
 </div>
         </div>
+
+
 
         <Table responsive className="product-table">
           <thead>
