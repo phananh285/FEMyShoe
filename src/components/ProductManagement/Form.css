@@ -1,0 +1,35 @@
+.image-container {
+    position: relative;
+    display: inline-block;
+    margin: 5px;
+  }
+  
+  .uploaded-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border: 1px solid #ccc;
+    cursor: pointer;
+  }
+  
+  .main-image {
+    border: 2px solid green;
+  }
+  
+  .delete-button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    display: none;
+  }
+  
+  .image-container:hover .delete-button {
+    display: block;
+  }
+  
+  .check-icon {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+  }
+  

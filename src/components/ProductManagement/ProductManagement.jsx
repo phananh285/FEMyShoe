@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Modal, Form, Table } from 'react-bootstrap';
 import MainCard from '../Card/MainCard';
 import './ProductManagement.css';
@@ -6,59 +6,62 @@ import ProductForm from './ProductForm.jsx';
 import ProductEdit from './ProductEdit.jsx';
 const ProductManagement = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
-  const [show, setShow] = useState(false)
-  const [showSua, setShowSua] = useState(false)
-  // Sample data - replace with your actual data source
-  const [products, setProducts] = useState([
-    { id: 1, name: 'Product 1', category: 'Category A', price: 100,  phongban: "mua ban",loaisp:"abc" },
-    { id: 2, name: 'Product 2', category: 'Category B', price: 200,  phongban: "mua ban",loaisp:"abcd" },
-  ]);
+  const [show, setShow] = useState(false);
+  const [showSua, setShowSua] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState({ show: false, productId: null });
+  const [isLoad,setIsLoad]=useState(false)
+  const [products, setProducts] = useState([]);
+const server='https://5e81-116-96-44-182.ngrok-free.app'
   useEffect(() => {
     const fetchPro = async () => {
-      const apiUrl = '/api/jobs?_limit=3';
+      const apiUrl = server + '/product?page=0&size=35';
       try {
-        const res = await fetch(apiUrl);
+        const res = await fetch(apiUrl, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Ngrok-Skip-Browser-Warning': 1
+          },
+        });
         const data = await res.json();
-        setPro(data);
+        setProducts(data.data.data);
       } catch (error) {
         console.log('Error fetching data', error);
-      } finally {
-        setLoading(false);
       }
     };
 
     fetchPro();
-  }, []);
-  const addPro= async (newPro) => {
-    const res = await fetch('/api/', {
+  }, [isLoad]);
+  const addPro = async (newPro) => {
+    await fetch(server+'/product', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Ngrok-Skip-Browser-Warning': 1
       },
       body: JSON.stringify(newPro),
     });
+    setIsLoad(!isLoad)
     return;
   };
 
-  // Delete 
   const deletePro = async (id) => {
-    const res = await fetch(`/api//${id}`, {
+    await fetch(`/api//${id}`, {
       method: 'DELETE',
     });
-    return;
+    setProducts(products.filter(product => product.id !== id));
+    setConfirmDelete({ show: false, productId: null });
   };
 
-  // Update 
   const updatePro = async (product) => {
-    const res = await fetch(`/api/${product.id}`, {
+    await fetch(`/api/${product.id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(product.id),
+      body: JSON.stringify(product),
     });
-    return;
   };
+
   const handleShowModal = () => {
     setShow(true);
   };
@@ -69,9 +72,13 @@ const ProductManagement = () => {
 
   const handleFileImport = (event) => {
     const file = event.target.files[0];
-    // Implement Excel file import logic here
     console.log('Importing file:', file);
   };
+
+  const handleConfirmDelete = (id) => {
+    setConfirmDelete({ show: true, productId: id });
+  };
+
   return (
     <MainCard title="Quản lý sản phẩm">
       <div className="product-management">
@@ -80,7 +87,7 @@ const ProductManagement = () => {
             <Button 
               className="action-button add-button"
               onClick={() => handleShowModal()}>
-              <i className="feather icon-plus"  />
+              <i className="feather icon-plus" />
               Thêm sản phẩm
             </Button>
             <label className="action-button import-button" style={{ margin: 0 }}>
@@ -102,15 +109,19 @@ const ProductManagement = () => {
             addProduct={addPro}
           />
         )}
+
         <Table responsive className="product-table">
           <thead>
             <tr>
               <th className='text'>Mã sản phẩm</th>
               <th>Tên sản phẩm</th>
-              <th>Danh mục</th>
               <th>Giá</th>
-              <th>Phòng ban</th>
-              <th>Loại sản phẩm</th>
+              <th>Số lượng bán ra</th>
+              <th>Đánh giá</th>
+              <th>Ảnh minh họa</th>
+              <th>Danh mục</th>
+              <th>Ngày tạo</th>
+              <th>Ngày cập nhật</th>
               <th>Thao tác</th>
             </tr>
           </thead>
@@ -119,23 +130,27 @@ const ProductManagement = () => {
               <tr key={product.id}>
                 <td>{product.id}</td>
                 <td>{product.name}</td>
-                <td>{product.description}</td>
                 <td>{product.price}</td>
-                <td>{product.category_id}</td>
-                <td>{product.create_at}</td>
-                <td>{product.updated_at}</td>
+                <td>{product.sold}</td>
+                <td>{product.rating}</td>
+                <td><img src={product.imageUrl} alt="product" /></td>
+                <td>{product.categoryId}</td>
+                <td>{product.createdAt}</td>
+                <td>{product.updatedAt}</td>
                 <td className="action-cell">
                   <button
                     className="edit-btn"
                     onClick={() => handleShowModalSua()} >
                     <i className="feather icon-edit-2" />
                     Sửa
-                  </button>      
-         {showSua && (<ProductEdit showSua={showSua} setShowSua={setShowSua} selectedProduct={product.id} UpdateProduct={updatePro}/>)}
-   
-                    <button
+                  </button>
+                  {showSua && (
+                    <ProductEdit showSua={showSua} setShowSua={setShowSua} selectedProduct={product.id} UpdateProduct={updatePro}/>
+                  )}
+
+                  <button
                     className="delete-btn"
-                    onClick={() => deletePro(product.id)}
+                    onClick={() => handleConfirmDelete(product.id)}
                   >
                     <i className="feather icon-trash-2" />
                     Xóa
@@ -146,6 +161,21 @@ const ProductManagement = () => {
           </tbody>
         </Table>
       </div>
+
+      <Modal show={confirmDelete.show} onHide={() => setConfirmDelete({ show: false, productId: null })}>
+        <Modal.Header closeButton>
+          <Modal.Title>Xác nhận xóa</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Bạn có chắc chắn muốn xóa sản phẩm này không?</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setConfirmDelete({ show: false, productId: null })}>
+            Hủy
+          </Button>
+          <Button variant="danger" onClick={() => deletePro(confirmDelete.productId)}>
+            Xóa
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </MainCard>
   );
 };

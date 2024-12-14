@@ -33,7 +33,7 @@ const ProductManagement = () => {
               <th className='text'>ID</th>
               <th>trạng thái</th>
               <th>Số lượng</th>
-     
+              <th>Thao tác</th>
             </tr>
           </thead>
           <tbody>
@@ -42,7 +42,22 @@ const ProductManagement = () => {
                 <td>{Order.id}</td>
                 <td>{Order.status}</td>
                 <td>{Order.total_amount}</td>
-          
+                <td className="action-cell">
+                  <button
+                    className="edit-btn"
+                    onClick={() => handleShowModalSua()} >
+                    <i className="feather icon-edit-2" />
+                    Xác nhận 
+                  </button>      
+                     
+                    <button
+                    className="delete-btn"
+                    onClick={() => deleteCategory(Category.id)}
+                  >
+                    <i className="feather icon-trash-2" />
+                    Hủy
+                  </button>
+                </td>
         
               </tr>
             ))}

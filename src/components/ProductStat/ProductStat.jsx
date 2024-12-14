@@ -21,8 +21,8 @@ const ProductManagement = () => {
     { id: 2, name: 'Product 2', category: 'Category B', price: 200, phongban: "mua ban", loaisp: "abcd" },
   ]);
 
-  useEffect((startDate,endDate) => {
-    const fetchPro = async () => {
+  useEffect(() => {
+    const fetchPro = async (startDate,endDate) => {
       const apiUrl = '';
       try {
         const res = await fetch(apiUrl);
@@ -71,13 +71,11 @@ const ProductManagement = () => {
     </div>
   </div>
 
-  <Button variant="primary" className="statistic-button">
+  <Button variant="primary" className="statistic-button" onClick={(startDate,endDate) => fetchPro()}>
     Thống kê
   </Button>
 </div>
         </div>
-
-
 
         <Table responsive className="product-table">
           <thead>

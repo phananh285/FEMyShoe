@@ -9,54 +9,69 @@ const ProductManagement = () => {
   const [show, setShow] = useState(false)
   const [showSua, setShowSua] = useState(false)
   // Sample data - replace with your actual data source
-  const [products, setProducts] = useState([
-    { id: 1, name: 'Product 1', category: 'Category A', price: 100,  phongban: "mua ban",loaisp:"abc" },
-    { id: 2, name: 'Product 2', category: 'Category B', price: 200,  phongban: "mua ban",loaisp:"abcd" },
+  const [category, setCategory] = useState([
+
   ]);
+  const [isload,setIsload]=useState(false)
+  const REACT_APP_API='https://b64c-2402-800-61c5-f47b-8ce5-2d84-a0f4-6cdd.ngrok-free.app'
   useEffect(() => {
-    const fetchPro = async () => {
-      const apiUrl = '/api/jobs?_limit=3';
+    const fetchCategory = async () => {
+      const apiUrl = REACT_APP_API+"/category";
       try {
-        const res = await fetch(apiUrl);
+        const res = await fetch(apiUrl, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Ngrok-Skip-Browser-Warning' : 1
+          },
+        });
         const data = await res.json();
-        setPro(data);
+
+        setCategory(data.data);
       } catch (error) {
         console.log('Error fetching data', error);
-      } finally {
-        setLoading(false);
-      }
+      } 
     };
 
-    fetchPro();
-  }, []);
-  const addCategory= async (newPro) => {
-    const res = await fetch('/api/', {
+    fetchCategory();
+  }, [isload]);
+
+  //them danh muc
+  const addCategory= async (newName) => {
+    const res = await fetch(REACT_APP_API+'/category', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(newPro),
+      body: JSON.stringify(newName),
     });
+    setIsload(!isload)
     return;
   };
 
   // Delete 
+
   const deleteCategory = async (id) => {
-    const res = await fetch(`/api//${id}`, {
+    const res = await fetch(REACT_APP_API+`/category/${id}`, {
       method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
     });
+    setIsload(!isload)
     return;
   };
 
   // Update 
-  const updateCategory = async (product) => {
-    const res = await fetch(`/api/${product.id}`, {
-      method: 'PUT',
+  const updateCategory = async (id,newName) => {
+    console.log(id)
+    const res = await fetch(server+`/category/${id}`, {
+      method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(product.id),
+      body: JSON.stringify(newName),
     });
+    setIsload(!isload)
     return;
   };
   const handleShowModal = () => {
@@ -105,25 +120,16 @@ const ProductManagement = () => {
         <Table responsive className="product-table">
           <thead>
             <tr>
-              <th className='text'>Mã sản phẩm</th>
-              <th>Tên sản phẩm</th>
-              <th>Danh mục</th>
-              <th>Giá</th>
-              <th>Phòng ban</th>
-              <th>Loại sản phẩm</th>
-              <th>Thao tác</th>
+              <th className='text'>Mã danh mục</th>
+              <th>Tên danh mục</th>
             </tr>
           </thead>
           <tbody>
-            {products.map((product) => (
-              <tr key={product.id}>
-                <td>{product.id}</td>
-                <td>{product.name}</td>
-                <td>{product.description}</td>
-                <td>{product.price}</td>
-                <td>{product.category_id}</td>
-                <td>{product.create_at}</td>
-                <td>{product.updated_at}</td>
+            {category.map((Category) => (
+              <tr key={Category.id}>
+                <td>{Category.id}</td>
+                <td>{Category.name}</td>
+          
                 <td className="action-cell">
                   <button
                     className="edit-btn"
@@ -131,11 +137,11 @@ const ProductManagement = () => {
                     <i className="feather icon-edit-2" />
                     Sửa
                   </button>      
-         {showSua && (<CategoryEdit showSua={showSua} setShowSua={setShowSua} selectedCategory={product.id} updateCategory={updateCategory}/>)}
+         {showSua && (<CategoryEdit showSua={showSua} setShowSua={setShowSua} selectedCategory={Category.id} updateCategory={updateCategory}/>)}
    
                     <button
                     className="delete-btn"
-                    onClick={() => deletePro(product.id)}
+                    onClick={() => deleteCategory(Category.id)}
                   >
                     <i className="feather icon-trash-2" />
                     Xóa
