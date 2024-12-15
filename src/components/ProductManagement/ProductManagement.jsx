@@ -11,10 +11,13 @@ const ProductManagement = () => {
   const [confirmDelete, setConfirmDelete] = useState({ show: false, productId: null });
   const [isLoad,setIsLoad]=useState(false)
   const [products, setProducts] = useState([]);
-const server='https://5e81-116-96-44-182.ngrok-free.app'
+  const [currentPage, setCurrentPage] = useState(0);  // Current page number
+  const [totalPages, setTotalPages] = useState(0); 
+const server='https://bb03-2402-800-61c5-f47b-9c3e-7ca6-8bac-795a.ngrok-free.app'
   useEffect(() => {
     const fetchPro = async () => {
-      const apiUrl = server + '/product?page=0&size=35';
+   
+      const apiUrl =server+`/product?page=14&size=35`;
       try {
         const res = await fetch(apiUrl, {
           headers: {
@@ -24,13 +27,14 @@ const server='https://5e81-116-96-44-182.ngrok-free.app'
         });
         const data = await res.json();
         setProducts(data.data.data);
+        setTotalPages(data.data.totalPage);
       } catch (error) {
         console.log('Error fetching data', error);
       }
     };
 
     fetchPro();
-  }, [isLoad]);
+  }, [isLoad,currentPage]);
   const addPro = async (newPro) => {
     await fetch(server+'/product', {
       method: 'POST',
@@ -43,23 +47,40 @@ const server='https://5e81-116-96-44-182.ngrok-free.app'
     setIsLoad(!isLoad)
     return;
   };
-
-  const deletePro = async (id) => {
-    await fetch(`/api//${id}`, {
-      method: 'DELETE',
-    });
-    setProducts(products.filter(product => product.id !== id));
-    setConfirmDelete({ show: false, productId: null });
+  // Pagination controls
+  const handlePrevPage = () => {
+    if (currentPage > 0) {
+      setCurrentPage(currentPage - 1);
+    }
   };
-
-  const updatePro = async (product) => {
-    await fetch(`/api/${product.id}`, {
-      method: 'PUT',
+  const handleNextPage = () => {
+    if (currentPage < totalPages - 1) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+  const deletePro = async (id) => {
+    const res = await fetch(server+`/product/${id}`, {
+      method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
       },
+    });
+    setIsLoad(!isLoad)
+    setConfirmDelete({ show: false, productId: null });
+    return;
+  };
+
+  const updatePro = async (id,product) => {
+    await fetch(server+`/product/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Ngrok-Skip-Browser-Warning': 1
+      },
       body: JSON.stringify(product),
     });
+    setIsLoad(!isLoad)
+    return;
   };
 
   const handleShowModal = () => {
@@ -109,8 +130,17 @@ const server='https://5e81-116-96-44-182.ngrok-free.app'
             addProduct={addPro}
           />
         )}
-
+        <div className="pagination-controls">
+             <Button variant="secondary" disabled={currentPage === 0} onClick={handlePrevPage}>
+            Previous
+            </Button>
+            <span>Page {currentPage + 1} of {totalPages}</span>
+            <Button variant="primary" disabled={currentPage === totalPages - 1} onClick={handleNextPage}>
+            Next
+            </Button>
+        </div>
         <Table responsive className="product-table">
+                 
           <thead>
             <tr>
               <th className='text'>Mã sản phẩm</th>
@@ -160,6 +190,7 @@ const server='https://5e81-116-96-44-182.ngrok-free.app'
             ))}
           </tbody>
         </Table>
+        
       </div>
 
       <Modal show={confirmDelete.show} onHide={() => setConfirmDelete({ show: false, productId: null })}>

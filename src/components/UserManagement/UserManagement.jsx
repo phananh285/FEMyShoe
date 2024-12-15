@@ -77,12 +77,12 @@ const ProductManagement = () => {
       <div className="product-management">
         <div className="management-header">
           <div className="management-actions">
-            <Button 
+            {/* <Button 
               className="action-button add-button"
               onClick={() => handleShowModal()}>
               <i className="feather icon-plus"  />
               Thêm Người Dùng
-            </Button>
+            </Button> */}
             <label className="action-button import-button" style={{ margin: 0 }}>
               <i className="feather icon-upload" />
               Import Excel
@@ -95,13 +95,6 @@ const ProductManagement = () => {
             </label>
           </div>
         </div>
-        {show && (
-          <UserForm
-            show={show}
-            setShow={setShow}
-            addUser={addUser}
-          />
-        )}
         <Table responsive className="product-table">
           <thead>
             <tr>

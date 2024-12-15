@@ -10,13 +10,22 @@ const ProductManagement = () => {
   const [show, setShow] = useState(false)
   const [showModalSua, setShowModalSua] = useState(false);
   const [showSua, setShowSua] = useState(false)
+  const [accept,setAccept]=useState(false);
+  const [pending,setPending]=useState(true);
   // Sample data - replace with your actual data source
   const [Order, setOrders] = useState([
     { id: 1, total_amount: 1000, status: 'active' },
     { id: 2, total_amount: 1000, status: 'in-active' },
   ]);
 
-
+const Accept =()=>{
+     setAccept(true);
+     setPending(false);
+}
+const Reject =(id)=>{
+     setAccept(false);
+     setPending(true);
+}
   return (
     
     <MainCard title="Xem danh sách đơn hàng">
@@ -45,14 +54,14 @@ const ProductManagement = () => {
                 <td className="action-cell">
                   <button
                     className="edit-btn"
-                    onClick={() => handleShowModalSua()} >
+                    onClick={() => Accept()} >
                     <i className="feather icon-edit-2" />
                     Xác nhận 
                   </button>      
                      
                     <button
                     className="delete-btn"
-                    onClick={() => deleteCategory(Category.id)}
+                    onClick={() => Reject(Order.id)}
                   >
                     <i className="feather icon-trash-2" />
                     Hủy

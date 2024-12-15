@@ -1,54 +1,135 @@
 import React, { useState } from 'react';
-import { Form, Input, Select, Button, Upload, message, Modal} from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
-const ProductEdit = ({selectedProduct, UpdateProduct,showSua,setShowSua}) => {
+import { Form, Input, Select, Button, Upload, message, Modal, Tag, Space, Typography, Card } from 'antd';
+import { CloseOutlined, UploadOutlined, PlusOutlined, CheckCircleTwoTone } from '@ant-design/icons';
+import { useEffect } from 'react';
+import axios from 'axios';
+const ProductForm = ({ UpdateProduct, showSua, setShowSua,selectedProduct }) => {
+  const [form] = Form.useForm();
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
-  const [created_at,setCreatedate] = useState('');
-  const [updated_at,setUpdateddate] = useState('');
-  const [form] = Form.useForm();
+  const [stocks, setStocks] = useState([]);
+  const [selectedVariants, setSelectedVariants] = useState([]); // Danh sách các size đã chọn
   const [categoryId, setCategoryId] = useState('');
+  const [categories, setCategories] = useState([]);
   const [uploadedImages, setUploadedImages] = useState([]);
+  const [hoveredImage, setHoveredImage] = useState(null);
   const [mainImage, setMainImage] = useState(null); // ID của ảnh chính
-  const [categoríes,setCategory]=useState([
-    {id:1,name:'Category 1'},
-    {id:2,name:'Cate2'}
-  ]);
-  console.log('Selected Product:', selectedProduct);     
-  const server='https://b64c-2402-800-61c5-f47b-8ce5-2d84-a0f4-6cdd.ngrok-free.app'
-  const { Option } = Select;
-  const handleCancel = () => {
-    form.resetFields();
-    setShowSua(false);
-  };
+  const server = 'https://bb03-2402-800-61c5-f47b-9c3e-7ca6-8bac-795a.ngrok-free.app';
+
   const normFile = (e) => {
     if (Array.isArray(e)) {
       return e;
     }
     return e?.fileList;
   };
-  const handleImageUpload = (fileList) => {
-    const images = fileList.map((file, index) => ({
-      id: index, // ID tạm thời, có thể thay bằng giá trị khác
-      url: file.thumbUrl || file.url,
-    }));
-    setUploadedImages(images);
-    if (!mainImage && images.length > 0) {
-      setMainImage(images[0].id); // Đặt ảnh đầu tiên làm mặc định
-    }
-  };
-  const submitForm = (e) => {
-    e.preventDefault();
 
-    const updateProduct = {
+  // useEffect(() => {
+  //   form.setFieldsValue({ uploadedImages });
+  // }, [uploadedImages]);
+
+  useEffect(() => {
+    const fetchCategory = async () => {
+      const apiUrl = server + "/category";
+      try {
+        const res = await fetch(apiUrl, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Ngrok-Skip-Browser-Warning': 1
+          },
+        });
+        const data = await res.json();
+        setCategories(data.data);
+      } catch (error) {
+        console.log('Error fetching data', error);
+      }
     };
 
-    UpdateProduct(updateProduct);
+    fetchCategory();
+  }, []);
+
+  const handleCancel = () => {
+    form.resetFields();
     setShowSua(false);
   };
 
+  const handleUpload = async (file) => {
+    const formData = new FormData();
+    formData.append('image', file); // Dữ liệu file được gửi đi
+    try {
+      const response = await axios.post(server + '/image', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Ngrok-Skip-Browser-Warning': 1
+        },
+      });
+      message.success('Upload thành công!');
+      console.log('Response:', response.data);
+      setUploadedImages([...uploadedImages, { id: response.data.data.id, url: URL.createObjectURL(file) }]);
+          // Nếu chưa có ảnh chính, đặt ảnh đầu tiên làm ảnh chính
+    if (!mainImage) {
+      setMainImage(response.data.id);
+    }
+    console.log('response id: ',response.data.data.id)
+    } catch (error) {
+      message.error('Upload thất bại!');
+      console.error('Error:', error);
+    }
+     console.log(uploadedImages[0].id);
+  };
 
+const handleImageUpload = ({ fileList }) => {
+    // const images = fileList.map((file) => ({
+    //   id: file.response?.id || file.id || file.uid, // Lấy id từ response của upload, fallback qua file.id hoặc file.uid
+    //   url: file.thumbUrl || file.response?.url || URL.createObjectURL(file.originFileObj), // Fallback cho URL
+    // }));
+    // console.log(uploadedImages[0].id);
+    // Đặt ảnh đầu tiên làm ảnh chính nếu chưa có
+    if (!mainImage && fileList.length > 0) {
+      setMainImage(fileList[0].id);
+    }
+  };
+
+
+  const removeImage = (id) => {
+    setUploadedImages((prev) => prev.filter((img) => img.id !== id));
+    if (mainImage === id) {
+      setMainImage(null);
+    }
+  };
+
+  const submitForm = (value) => {
+    console.log("selected product: ",selectedProduct)
+    // Tạo dữ liệu sản phẩm, chỉ định ảnh chính
+    const productData = {
+      name: value.productName,
+      description: value.description,
+      categoryId: categoryId,
+      images: uploadedImages.map((img) => {
+        return img.id === mainImage
+          ? { id: img.id, isPrimary: true } // Chỉ định ảnh chính
+          : { id: img.id }; // Không có thuộc tính isPrimary
+      }),
+      attributes: [
+        {
+          name: "kích cỡ",
+          options: selectedVariants.map((variant) => parseInt(variant.size)),
+        },
+      ],
+      variants: selectedVariants.map((variant) => ({
+        price: parseFloat(variant.price), // Chuyển giá sang số thực
+        stock: parseInt(variant.stock), // Chuyển stock sang số nguyên
+        attributeOptions: [variant.size],
+      })),
+    };
+  
+    console.log(productData);
+    
+    // Gọi hàm addProduct với dữ liệu sản phẩm
+    UpdateProduct(selectedProduct,productData);
+    setShowSua(false);
+  };
+  
   return (
     <Modal open={showSua} onCancel={handleCancel} footer={null}>
       <Form form={form} layout="vertical" onFinish={submitForm}>
@@ -69,6 +150,47 @@ const ProductEdit = ({selectedProduct, UpdateProduct,showSua,setShowSua}) => {
         <Form.Item label="Mô tả" name="description">
           <Input value={description} onChange={(e) => setDescription(e.target.value)} />
         </Form.Item>
+        <Form.Item label="Danh sách kích cỡ">
+          <Space.Compact>
+            <Form.Item name={['variants', 'size']} noStyle>
+              <Input placeholder="size" />
+            </Form.Item>
+            <Form.Item name={['variants', 'stock']} noStyle>
+              <Input placeholder="stock" />
+            </Form.Item>
+            <Form.Item name={['variants', 'price']} noStyle>
+              <Input placeholder="price" />
+            </Form.Item>
+            <Button
+              type="dashed"
+              icon={<PlusOutlined />}
+              onClick={() => {
+                const size = form.getFieldValue(['variants', 'size']);
+                const stock = form.getFieldValue(['variants', 'stock']);
+                const price = form.getFieldValue(['variants', 'price']);
+
+                if (size && stock && price) {
+                  setSelectedVariants((prevVariants) => [
+                    ...prevVariants,
+                    { size, stock, price }
+                  ]);
+                  form.resetFields(['variants']);
+                } else {
+                  message.warning('Vui lòng nhập đầy đủ thông tin size, stock, và price!');
+                }
+              }}
+            >
+              Thêm
+            </Button>
+          </Space.Compact>
+        </Form.Item>
+
+        {selectedVariants.map((variant, index) => (
+          <Tag key={index}>
+            Size: {variant.size}, Stock: {variant.stock}, Price: {variant.price}
+          </Tag>
+        ))}
+
         <Form.Item
           label="Danh mục"
           name="category"
@@ -79,65 +201,78 @@ const ProductEdit = ({selectedProduct, UpdateProduct,showSua,setShowSua}) => {
             value={categoryId}
             onChange={(value) => setCategoryId(value)}
           >
-            {categoríes.map((category) => (
+            {categories.map((category) => (
               <Select.Option key={category.id} value={category.id}>
                 {category.name}
               </Select.Option>
             ))}
           </Select>
         </Form.Item>
-        <Form.Item label="Upload ảnh" valuePropName="fileList" getValueFromEvent={normFile}>
+
+        <Form.Item initialValue={uploadedImages} label="Upload ảnh" valuePropName="fileList" getValueFromEvent={normFile}>
           <Upload
             listType="picture-card"
             multiple
-            action="https://1b6d-2402-800-61c5-f47b-84c6-6956-84ee-4377.ngrok-free.app/product?page=0&size=35/upload"
-            onChange={({ fileList }) => handleImageUpload(fileList)}
+            customRequest={({ file, onSuccess, onError }) => {
+              handleUpload(file)
+                .then(() => onSuccess("ok"))
+                .catch((err) => onError(err));
+            }}
+            showUploadList={false}
+            fileList={uploadedImages}
+            onChange={(fileList) => handleImageUpload(fileList)}
           >
-            <div>
-              <PlusOutlined />
-              <div style={{ marginTop: 8 }}>Upload</div>
-            </div>
+            {uploadedImages.length >= 5 ? null : (
+              <div>
+                <PlusOutlined />
+                <div style={{ marginTop: 8 }}>Upload</div>
+              </div>
+            )}
           </Upload>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '10px' }}>
             {uploadedImages.map((image) => (
               <div
                 key={image.id}
-                style={{
-                  position: 'relative',
-                  display: 'inline-block',
-                  cursor: 'pointer',
-                }}
-                onClick={() => setMainImage(image.id)}
+                className="image-container"
+                onMouseEnter={() => setHoveredImage(image.id)}
+                onMouseLeave={() => setHoveredImage(null)}
               >
-                <img
-                  src={image.url}
-                  alt="uploaded"
-                  style={{
-                    width: 100,
-                    height: 100,
-                    border: mainImage === image.id ? '2px solid green' : '1px solid #ccc',
-                  }}
-                />
-                {mainImage === image.id && (
+               <img
+                src={image.url}
+               alt="uploaded"
+               className={`uploaded-image ${mainImage === image.id ? 'main-image' : ''}`}
+               onClick={() => setMainImage(image.id)} // Chọn ảnh làm ảnh chính
+                    />
+                {hoveredImage == image.id && (
+                  <Button
+                    className="delete-button"
+                    shape="circle"
+                    danger
+                    icon={<CloseOutlined />}
+                    onClick={() => removeImage(image.id)}
+                  />
+                )}
+                {mainImage == image.id && (
                   <CheckCircleTwoTone
                     twoToneColor="#52c41a"
-                    style={{ position: 'absolute', top: 5, right: 5 }}
+                    className="check-icon"
                   />
                 )}
               </div>
             ))}
           </div>
         </Form.Item>
+
         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
           <Button onClick={handleCancel}>Hủy</Button>
-          <Button type="primary" htmlType="submit" onClick={handleCancel}>
+          <Button type="primary" htmlType="submit">
             Lưu
           </Button>
         </div>
       </Form>
     </Modal>
-
   );
 };
 
-export default ProductEdit;
+export default ProductForm;

@@ -16,7 +16,7 @@ const ProductForm = ({ addProduct, show, setShow }) => {
   const [uploadedImages, setUploadedImages] = useState([]);
   const [hoveredImage, setHoveredImage] = useState(null);
   const [mainImage, setMainImage] = useState(null); // ID của ảnh chính
-  const server = 'https://5e81-116-96-44-182.ngrok-free.app';
+  const server = 'https://bb03-2402-800-61c5-f47b-9c3e-7ca6-8bac-795a.ngrok-free.app';
 
   const normFile = (e) => {
     if (Array.isArray(e)) {
@@ -25,9 +25,9 @@ const ProductForm = ({ addProduct, show, setShow }) => {
     return e?.fileList;
   };
 
-  useEffect(() => {
-    form.setFieldsValue({ uploadedImages });
-  }, [uploadedImages]);
+  // useEffect(() => {
+  //   form.setFieldsValue({ uploadedImages });
+  // }, [uploadedImages]);
 
   useEffect(() => {
     const fetchCategory = async () => {
@@ -66,24 +66,28 @@ const ProductForm = ({ addProduct, show, setShow }) => {
       });
       message.success('Upload thành công!');
       console.log('Response:', response.data);
-      setUploadedImages([...uploadedImages, { id: response.data.id, url: URL.createObjectURL(file) }]);
+      setUploadedImages([...uploadedImages, { id: response.data.data.id, url: URL.createObjectURL(file) }]);
+          // Nếu chưa có ảnh chính, đặt ảnh đầu tiên làm ảnh chính
+    if (!mainImage) {
+      setMainImage(response.data.id);
+    }
+    console.log('response id: ',response.data.data.id)
     } catch (error) {
       message.error('Upload thất bại!');
       console.error('Error:', error);
     }
+     console.log(uploadedImages[0].id);
   };
 
 const handleImageUpload = ({ fileList }) => {
-    const images = fileList.map((file) => ({
-      id: file.response?.id || file.id || file.uid, // Lấy id từ response của upload, fallback qua file.id hoặc file.uid
-      url: file.thumbUrl || file.response?.url || URL.createObjectURL(file.originFileObj), // Fallback cho URL
-    }));
-
-    setUploadedImages(images);
-
+    // const images = fileList.map((file) => ({
+    //   id: file.response?.id || file.id || file.uid, // Lấy id từ response của upload, fallback qua file.id hoặc file.uid
+    //   url: file.thumbUrl || file.response?.url || URL.createObjectURL(file.originFileObj), // Fallback cho URL
+    // }));
+    // console.log(uploadedImages[0].id);
     // Đặt ảnh đầu tiên làm ảnh chính nếu chưa có
-    if (!mainImage && images.length > 0) {
-      setMainImage(images[0].id);
+    if (!mainImage && fileList.length > 0) {
+      setMainImage(fileList[0].id);
     }
   };
 
@@ -97,16 +101,17 @@ const handleImageUpload = ({ fileList }) => {
 
   const submitForm = (value) => {
     console.log(value);
-
-    // Create the product data including selected variants
+  
+    // Tạo dữ liệu sản phẩm, chỉ định ảnh chính
     const productData = {
-      name: value.productName, // Use the correct name for product name
+      name: value.productName,
       description: value.description,
-      categoryId: categoryId, // Assuming categoryId is set correctly
-      images: uploadedImages.map((img) => ({
-        id: img.id,
-        isPrimary: img.id === mainImage,
-      })),
+      categoryId: categoryId,
+      images: uploadedImages.map((img) => {
+        return img.id === mainImage
+          ? { id: img.id, isPrimary: true } // Chỉ định ảnh chính
+          : { id: img.id }; // Không có thuộc tính isPrimary
+      }),
       attributes: [
         {
           name: "kích cỡ",
@@ -114,17 +119,19 @@ const handleImageUpload = ({ fileList }) => {
         },
       ],
       variants: selectedVariants.map((variant) => ({
-        price: parseFloat(variant.price), // Ensure variant price is a number
-        stock: parseInt(variant.stock), // Use the corresponding stock
+        price: parseFloat(variant.price), // Chuyển giá sang số thực
+        stock: parseInt(variant.stock), // Chuyển stock sang số nguyên
         attributeOptions: [variant.size],
       })),
     };
-    console.log(productData)
-    // Call the addProduct function
+  
+    console.log(productData);
+  
+    // Gọi hàm addProduct với dữ liệu sản phẩm
     addProduct(productData);
     setShow(false);
   };
-
+  
   return (
     <Modal open={show} onCancel={handleCancel} footer={null}>
       <Form form={form} layout="vertical" onFinish={submitForm}>
@@ -214,8 +221,8 @@ const handleImageUpload = ({ fileList }) => {
                 .catch((err) => onError(err));
             }}
             showUploadList={false}
-            value={uploadedImages}
-            onChange={handleImageUpload}
+            fileList={uploadedImages}
+            onChange={(fileList) => handleImageUpload(fileList)}
           >
             {uploadedImages.length >= 5 ? null : (
               <div>
@@ -233,13 +240,13 @@ const handleImageUpload = ({ fileList }) => {
                 onMouseEnter={() => setHoveredImage(image.id)}
                 onMouseLeave={() => setHoveredImage(null)}
               >
-                <img
-                  src={image.url}
-                  alt="uploaded"
-                  className={`uploaded-image ${mainImage === image.id ? 'main-image' : ''}`}
-                  onClick={() => setMainImage(image.id)}
-                />
-                {hoveredImage === image.id && (
+               <img
+                src={image.url}
+               alt="uploaded"
+               className={`uploaded-image ${mainImage === image.id ? 'main-image' : ''}`}
+               onClick={() => setMainImage(image.id)} // Chọn ảnh làm ảnh chính
+                    />
+                {hoveredImage == image.id && (
                   <Button
                     className="delete-button"
                     shape="circle"
@@ -248,7 +255,7 @@ const handleImageUpload = ({ fileList }) => {
                     onClick={() => removeImage(image.id)}
                   />
                 )}
-                {mainImage === image.id && (
+                {mainImage == image.id && (
                   <CheckCircleTwoTone
                     twoToneColor="#52c41a"
                     className="check-icon"

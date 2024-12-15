@@ -13,10 +13,10 @@ const ProductManagement = () => {
 
   ]);
   const [isload,setIsload]=useState(false)
-  const REACT_APP_API='https://b64c-2402-800-61c5-f47b-8ce5-2d84-a0f4-6cdd.ngrok-free.app'
+  const server='https://bb03-2402-800-61c5-f47b-9c3e-7ca6-8bac-795a.ngrok-free.app'
   useEffect(() => {
     const fetchCategory = async () => {
-      const apiUrl = REACT_APP_API+"/category";
+      const apiUrl = server+"/category";
       try {
         const res = await fetch(apiUrl, {
           headers: {
@@ -88,7 +88,7 @@ const ProductManagement = () => {
     console.log('Importing file:', file);
   };
   return (
-    <MainCard title="Quản lý sản phẩm">
+    <MainCard title="Quản lý danh mục">
       <div className="product-management">
         <div className="management-header">
           <div className="management-actions">
@@ -122,6 +122,7 @@ const ProductManagement = () => {
             <tr>
               <th className='text'>Mã danh mục</th>
               <th>Tên danh mục</th>
+              <th>Thao tác</th>
             </tr>
           </thead>
           <tbody>
@@ -129,7 +130,6 @@ const ProductManagement = () => {
               <tr key={Category.id}>
                 <td>{Category.id}</td>
                 <td>{Category.name}</td>
-          
                 <td className="action-cell">
                   <button
                     className="edit-btn"
@@ -137,8 +137,7 @@ const ProductManagement = () => {
                     <i className="feather icon-edit-2" />
                     Sửa
                   </button>      
-         {showSua && (<CategoryEdit showSua={showSua} setShowSua={setShowSua} selectedCategory={Category.id} updateCategory={updateCategory}/>)}
-   
+            {showSua && (<CategoryEdit showSua={showSua} setShowSua={setShowSua} selectedCategory={Category.id} updateCategory={updateCategory}/>)}
                     <button
                     className="delete-btn"
                     onClick={() => deleteCategory(Category.id)}

@@ -39,6 +39,7 @@
     width: 100%;
     border-collapse: collapse;
     overflow-y: auto;
+    overflow-x: auto;
     margin-top: 20px;
 }
 
@@ -54,6 +55,27 @@
     font-weight: 600;
 }
 
+/* Đặt chiều rộng cố định cho các cột */
+.product-table th:nth-child(1),
+.product-table td:nth-child(1) { width: 10%; } /* Mã sản phẩm */
+.product-table th:nth-child(2),
+.product-table td:nth-child(2) { width: 20%; } /* Tên sản phẩm */
+.product-table th:nth-child(3),
+.product-table td:nth-child(3) { width: 10%; } /* Giá */
+.product-table th:nth-child(4),
+.product-table td:nth-child(4) { width: 10%; } /* Số lượng bán ra */
+.product-table th:nth-child(5),
+.product-table td:nth-child(5) { width: 10%; } /* Đánh giá */
+.product-table th:nth-child(6),
+.product-table td:nth-child(6) { width: 10%; } /* Ảnh minh họa */
+.product-table th:nth-child(7),
+.product-table td:nth-child(7) { width: 10%; } /* Danh mục */
+.product-table th:nth-child(8),
+.product-table td:nth-child(8) { width: 10%; } /* Ngày tạo */
+.product-table th:nth-child(9),
+.product-table td:nth-child(9) { width: 10%; } /* Ngày cập nhật */
+.product-table th:nth-child(10),
+.product-table td:nth-child(10) { width: 10%; } /* Thao tác */
 .product-table tr:hover {
     background-color: #f9f9f9;
 }
@@ -108,3 +130,14 @@
     border: 1px solid #ced4da;
     border-radius: 0.25rem;
 }
+.pagination-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem; /* Increase the spacing between buttons */
+    margin-top: 1rem;
+  }
+  
+  .pagination-controls button {
+    margin: 0;
+  }
