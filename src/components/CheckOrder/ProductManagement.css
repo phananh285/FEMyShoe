@@ -107,3 +107,11 @@
     border: 1px solid #ced4da;
     border-radius: 0.25rem;
 }
+.product-management .ant-collapse-content-box {
+    margin-left: 10px; /* Hoặc 20px, điều chỉnh khoảng cách cho vừa */
+  }
+/* ProductManagement.css */
+.collapse-container {
+    margin-left: 0; /* Hoặc giá trị bạn muốn */
+    padding-left: 0; /* Hoặc giá trị bạn muốn */
+  }

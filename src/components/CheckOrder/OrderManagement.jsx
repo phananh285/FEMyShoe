@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Modal, Form, Table } from 'react-bootstrap';
+import {Collapse } from 'antd';
 import MainCard from '../Card/MainCard';
 import './ProductManagement.css';
 import ProductForm from './ProductForm.jsx';
 import ProductEdit from './ProductEdit.jsx';
+import server from 'constant/linkapi';
 const ProductManagement = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -12,22 +14,99 @@ const ProductManagement = () => {
   const [showSua, setShowSua] = useState(false)
   const [accept,setAccept]=useState(false);
   const [pending,setPending]=useState(true);
+  const [isLoad,setIsLoad]=useState(false);
   // Sample data - replace with your actual data source
-  const [Order, setOrders] = useState([
-    { id: 1, total_amount: 1000, status: 'active' },
-    { id: 2, total_amount: 1000, status: 'in-active' },
-  ]);
-
-const Accept =()=>{
-     setAccept(true);
-     setPending(false);
+  const [Orders, setOrders] = useState([]);
+   useEffect(() => {
+     const fetchPro = async () => {
+       const apiUrl =server+`/order/admin/payment-success?page=0&size=100`;
+       try {
+         const res = await fetch(apiUrl, {
+           headers: {
+             'Content-Type': 'application/json',
+             'Ngrok-Skip-Browser-Warning': 1
+           },
+         });
+         const data = await res.json();
+         console.log(data)
+         setOrders(data.data.data);
+        // setTotalPages(data.data.totalPage);
+       } catch (error) {
+         console.log('Error fetching data', error);
+       }
+     };
+ 
+     fetchPro();
+   }, [isLoad]);
+const Accept = async (id) => {
+  const bodyid={
+    "orderId": id,
+    "status": "SUCCESS"
+}
+  const res = await fetch(server+`/order/status`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    
+    body: JSON.stringify(bodyid),
+  });
+  setIsLoad(!isLoad)
+  return;
 }
 const Reject =(id)=>{
      setAccept(false);
      setPending(true);
 }
+const text="ds"
+const items = Orders.map((Order) => ({
+  key: Order.id,
+  label: (
+    <div>
+ Mã đơn hàng : {Order.id} || Tên người nhận:  {Order.user.fullName} || Username:  {Order.user.username} || Email : {Order.user.email} || Ngày tạo :       
+  {Order.createdAt} || Tổng tiền : {Order.totalAmount} || Trạng thái thanh toán :  {Order.payment.status} || Trạng thái đơn hàng : {Order.status}
+<br/>
+{Order.payment.status === 'SUCCESS' && Order.status !== 'SUCCESS' && (
+        <Button variant="primary" onClick={() => Accept(Order.id)} >
+          Accept
+        </Button>
+      )}
+    </div>
+  ),
+  children: (
+    <div>
+      <Table>
+        <thead>
+          <tr>
+            <th className='text'>id</th>
+            <th>Số lượng</th>
+            <th>Giá</th>
+            <th>Mã sản phẩm</th>
+            <th>Code</th>
+            <th>Trạng thái item</th>
+            <th>Trạng thái thanh toán tổng thể</th>
+          </tr>
+        </thead>
+        <tbody>
+          {Order.orderItems.map(item => (
+            <tr key={item.id}>
+              <td>{item.id}</td>
+              <td>{item.quantity}</td>
+              <td>{item.price}</td>
+              <td>{item.productId}</td>
+              <td>{item.code}</td>
+              <td>{item.status}</td>
+              <td>{Order.payment.status}</td>
+            </tr>
+          ))}
+      
+        </tbody>
+      </Table>
+    </div>
+  ),
+}));
+
   return (
-    
     <MainCard title="Xem danh sách đơn hàng">
       <div className="product-management">
         <div className="management-header">
@@ -36,42 +115,10 @@ const Reject =(id)=>{
           </div>
         </div>
 
-        <Table responsive className="product-table">
-          <thead>
-            <tr>
-              <th className='text'>ID</th>
-              <th>trạng thái</th>
-              <th>Số lượng</th>
-              <th>Thao tác</th>
-            </tr>
-          </thead>
-          <tbody>
-            {Order.map((Order) => (
-              <tr key={Order.id}>
-                <td>{Order.id}</td>
-                <td>{Order.status}</td>
-                <td>{Order.total_amount}</td>
-                <td className="action-cell">
-                  <button
-                    className="edit-btn"
-                    onClick={() => Accept()} >
-                    <i className="feather icon-edit-2" />
-                    Xác nhận 
-                  </button>      
-                     
-                    <button
-                    className="delete-btn"
-                    onClick={() => Reject(Order.id)}
-                  >
-                    <i className="feather icon-trash-2" />
-                    Hủy
-                  </button>
-                </td>
-        
-              </tr>
-            ))}
-          </tbody>
-        </Table>
+        <div className="product-management collapse-container" style={{ marginLeft: '0' }}>
+  <Collapse items={items} />
+</div>
+
       </div>
     </MainCard>
   );

@@ -17,7 +17,7 @@ const server='https://bb03-2402-800-61c5-f47b-9c3e-7ca6-8bac-795a.ngrok-free.app
   useEffect(() => {
     const fetchPro = async () => {
    
-      const apiUrl =server+`/product?page=14&size=35`;
+      const apiUrl =server+`/product?page=14&size=10`;
       try {
         const res = await fetch(apiUrl, {
           headers: {
