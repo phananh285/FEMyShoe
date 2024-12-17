@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Modal, Form, Table } from 'react-bootstrap';
-import {Collapse } from 'antd';
+import { Button, Modal, Table } from 'react-bootstrap';
+import {Collapse, Form, Input} from 'antd';
 import MainCard from '../Card/MainCard';
 import './ProductManagement.css';
 import ProductForm from './ProductForm.jsx';
 import ProductEdit from './ProductEdit.jsx';
 import server from 'constant/linkapi';
 const ProductManagement = () => {
+  const [form] = Form.useForm();
   const [showModal, setShowModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [show, setShow] = useState(false)
@@ -15,6 +16,7 @@ const ProductManagement = () => {
   const [accept,setAccept]=useState(false);
   const [pending,setPending]=useState(true);
   const [isLoad,setIsLoad]=useState(false);
+  const [findID, setfindID] = useState('');
   // Sample data - replace with your actual data source
   const [Orders, setOrders] = useState([]);
    useEffect(() => {
@@ -53,6 +55,9 @@ const Accept = async (id) => {
   });
   setIsLoad(!isLoad)
   return;
+}
+const find = (value) =>{
+  console.log(findID)
 }
 const Reject =(id)=>{
      setAccept(false);
@@ -111,7 +116,19 @@ const items = Orders.map((Order) => ({
       <div className="product-management">
         <div className="management-header">
           <div className="management-actions">
-    
+          <Form form={form} onFinish={find} layout="horizontal">
+          <div >
+          <Button 
+              className="action-button add-button"
+              type="primary" htmlType="submit"
+              >
+              <i className="feather icon-plus" />
+              Tìm kiếm đơn hàng : 
+            </Button>
+            <Input value={findID} onChange={(e) => setfindID(e.target.value)} />
+          </div>
+          
+            </Form>
           </div>
         </div>
 

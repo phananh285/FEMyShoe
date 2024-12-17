@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Modal, Form, Table } from 'react-bootstrap';
+import { Button, Modal,Table} from 'react-bootstrap';
+import { Form, Input} from 'antd';
 import MainCard from '../Card/MainCard';
 import './ProductManagement.css';
 import ProductForm from './ProductForm.jsx';
 import ProductEdit from './ProductEdit.jsx';
 const ProductManagement = () => {
+  const [form] = Form.useForm();
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [show, setShow] = useState(false);
   const [showSua, setShowSua] = useState(false);
@@ -13,6 +15,7 @@ const ProductManagement = () => {
   const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);  // Current page number
   const [totalPages, setTotalPages] = useState(0); 
+  const [findID, setfindID] = useState('');
 const server='https://bb03-2402-800-61c5-f47b-9c3e-7ca6-8bac-795a.ngrok-free.app'
   useEffect(() => {
     const fetchPro = async () => {
@@ -69,7 +72,9 @@ const server='https://bb03-2402-800-61c5-f47b-9c3e-7ca6-8bac-795a.ngrok-free.app
     setConfirmDelete({ show: false, productId: null });
     return;
   };
-
+const find = (value) =>{
+  console.log(findID)
+}
   const updatePro = async (id,product) => {
     await fetch(server+`/product/${id}`, {
       method: 'PUT',
@@ -111,6 +116,19 @@ const server='https://bb03-2402-800-61c5-f47b-9c3e-7ca6-8bac-795a.ngrok-free.app
               <i className="feather icon-plus" />
               Thêm sản phẩm
             </Button>
+        <Form form={form} onFinish={find} layout="horizontal">
+          <div >
+          <Button 
+              className="action-button add-button"
+              type="primary" htmlType="submit"
+              >
+              <i className="feather icon-plus" />
+              Tìm kiếm sản phẩm : 
+            </Button>
+            <Input value={findID} onChange={(e) => setfindID(e.target.value)} />
+          </div>
+          
+            </Form>
             <label className="action-button import-button" style={{ margin: 0 }}>
               <i className="feather icon-upload" />
               Import Excel

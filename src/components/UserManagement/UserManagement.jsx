@@ -1,13 +1,16 @@
 import React, { useState,useEffect } from 'react';
-import { Button, Modal, Form, Table } from 'react-bootstrap';
+import { Button, Modal, Table } from 'react-bootstrap';
 import MainCard from '../Card/MainCard';
+import { Form, Input} from 'antd';
 import './ProductManagement.css';
 import UserForm from './UserForm.jsx';
 import UserEdit from './UserEdit.jsx';
 const ProductManagement = () => {
+  const [form] = Form.useForm();
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [show, setShow] = useState(false)
   const [showSua, setShowSua] = useState(false)
+  const [findID, setfindID] = useState('');
   // Sample data - replace with your actual data source
   const [products, setProducts] = useState([
     { id: 1, name: 'Product 1', category: 'Category A', price: 100,  phongban: "mua ban",loaisp:"abc" },
@@ -22,9 +25,7 @@ const ProductManagement = () => {
         setPro(data);
       } catch (error) {
         console.log('Error fetching data', error);
-      } finally {
-        setLoading(false);
-      }
+      } 
     };
 
     fetchPro();
@@ -72,17 +73,27 @@ const ProductManagement = () => {
     // Implement Excel file import logic here
     console.log('Importing file:', file);
   };
+  const find = (value) =>{
+    console.log(findID)
+  }
   return (
     <MainCard title="Quản lý người dùng">
       <div className="product-management">
         <div className="management-header">
           <div className="management-actions">
-            {/* <Button 
+               <Form form={form} onFinish={find} layout="horizontal">
+          <div >
+          <Button 
               className="action-button add-button"
-              onClick={() => handleShowModal()}>
-              <i className="feather icon-plus"  />
-              Thêm Người Dùng
-            </Button> */}
+              type="primary" htmlType="submit"
+              >
+              <i className="feather icon-plus" />
+              Tìm kiếm người dùng : 
+            </Button>
+            <Input value={findID} onChange={(e) => setfindID(e.target.value)} />
+          </div>
+          
+            </Form>
             <label className="action-button import-button" style={{ margin: 0 }}>
               <i className="feather icon-upload" />
               Import Excel
