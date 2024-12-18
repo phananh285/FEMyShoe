@@ -5,6 +5,7 @@ import MainCard from '../Card/MainCard';
 import './ProductManagement.css';
 import ProductForm from './ProductForm.jsx';
 import ProductEdit from './ProductEdit.jsx';
+import server from 'constant/linkapi';
 const ProductManagement = () => {
   const [form] = Form.useForm();
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -16,11 +17,11 @@ const ProductManagement = () => {
   const [currentPage, setCurrentPage] = useState(0);  // Current page number
   const [totalPages, setTotalPages] = useState(0); 
   const [findID, setfindID] = useState('');
-const server='https://bb03-2402-800-61c5-f47b-9c3e-7ca6-8bac-795a.ngrok-free.app'
+  const [findName,setfindName]=useState('');
   useEffect(() => {
     const fetchPro = async () => {
    
-      const apiUrl =server+`/product?page=14&size=10`;
+      const apiUrl =server+`/product?page=0&size=10&sortBy=id_desc`;
       try {
         const res = await fetch(apiUrl, {
           headers: {
@@ -72,8 +73,26 @@ const server='https://bb03-2402-800-61c5-f47b-9c3e-7ca6-8bac-795a.ngrok-free.app
     setConfirmDelete({ show: false, productId: null });
     return;
   };
-const find = (value) =>{
-  console.log(findID)
+const funcfindName = async () =>{
+  const apiUrl = server+`/product/search?page=0&size=100&sortBy=rating_desc&name=${findName}`; // URL tìm kiếm
+  try {
+    const res = await fetch(apiUrl, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Ngrok-Skip-Browser-Warning': 1,
+      },
+    });
+    const data = await res.json();
+    if (data) {
+      setProducts(data.data.data); // Đặt kết quả vào danh sách đơn hàng
+    } else {
+      console.error("Không tìm thấy đơn hàng!");
+      setOrders([]);
+    }
+  } catch (error) {
+    console.error("Lỗi khi tìm kiếm đơn hàng:", error);
+    setOrders([]);
+  }
 }
   const updatePro = async (id,product) => {
     await fetch(server+`/product/${id}`, {
@@ -104,7 +123,23 @@ const find = (value) =>{
   const handleConfirmDelete = (id) => {
     setConfirmDelete({ show: true, productId: id });
   };
-
+//Reset kết quả tìm kiếm
+const resetSearch = async () => {
+  setfindID(''); // Xóa mã tìm kiếm
+  try {
+    const apiUrl = server+`/product?page=14&size=10`; // API danh sách gốc
+    const res = await fetch(apiUrl, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Ngrok-Skip-Browser-Warning': 1,
+      },
+    });
+    const data = await res.json();
+    setProducts(data.data.data); // Khôi phục danh sách ban đầu
+  } catch (error) {
+    console.error("Lỗi khi reset tìm kiếm:", error);
+  }
+};
   return (
     <MainCard title="Quản lý sản phẩm">
       <div className="product-management">
@@ -116,19 +151,28 @@ const find = (value) =>{
               <i className="feather icon-plus" />
               Thêm sản phẩm
             </Button>
-        <Form form={form} onFinish={find} layout="horizontal">
-          <div >
-          <Button 
-              className="action-button add-button"
-              type="primary" htmlType="submit"
-              >
-              <i className="feather icon-plus" />
-              Tìm kiếm sản phẩm : 
-            </Button>
-            <Input value={findID} onChange={(e) => setfindID(e.target.value)} />
-          </div>
-          
-            </Form>
+            <Input 
+    value={findName}
+    onChange={(e) => setfindName(e.target.value)} 
+    placeholder="Nhập tên sản phẩm" 
+    style={{ width: '250px' }} /* Đặt chiều rộng cho Input */
+  />
+  <Button 
+    className="action-button add-button"
+    type="primary"
+    onClick={funcfindName} /* Gọi hàm tìm kiếm theo mã */
+  >
+    Tìm theo tên
+  </Button>
+  
+
+  <Button 
+    className="action-button reset-button"
+    type="default"
+    onClick={resetSearch} /* Gọi hàm reset */
+  >
+    Reset
+  </Button>
             <label className="action-button import-button" style={{ margin: 0 }}>
               <i className="feather icon-upload" />
               Import Excel

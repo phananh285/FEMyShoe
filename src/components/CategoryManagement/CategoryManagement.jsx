@@ -4,6 +4,7 @@ import MainCard from '../Card/MainCard';
 import './ProductManagement.css';
 import CategoryForm from './CategoryForm.jsx';
 import CategoryEdit from './CategoryEdit.jsx';
+import server from 'constant/linkapi';
 const ProductManagement = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [show, setShow] = useState(false)
@@ -13,7 +14,6 @@ const ProductManagement = () => {
 
   ]);
   const [isload,setIsload]=useState(false)
-  const server='https://bb03-2402-800-61c5-f47b-9c3e-7ca6-8bac-795a.ngrok-free.app'
   useEffect(() => {
     const fetchCategory = async () => {
       const apiUrl = server+"/category";

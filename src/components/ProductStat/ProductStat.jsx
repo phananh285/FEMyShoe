@@ -5,6 +5,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import MainCard from '../Card/MainCard';
 import './ProductManagement.css';
 import { FaCalendarAlt } from 'react-icons/fa';
+import RevenueChart from 'components/RevenueChart';
 
 const ProductManagement = () => {
   const [showModal, setShowModal] = useState(false);
@@ -76,32 +77,7 @@ const ProductManagement = () => {
   </Button>
 </div>
         </div>
-
-        <Table responsive className="product-table">
-          <thead>
-            <tr>
-              <th className='text'>Mã sản phẩm</th>
-              <th>Tên sản phẩm</th>
-              <th>Danh mục</th>
-              <th>Giá</th>
-              <th>Phòng ban</th>
-              <th>Loại sản phẩm</th>
-              <th>Số lượng bán ra</th>
-            </tr>
-          </thead>
-          <tbody>
-            {products.map((product) => (
-              <tr key={product.id}>
-                <td>{product.id}</td>
-                <td>{product.name}</td>
-                <td>{product.category}</td>
-                <td>{product.price}</td>
-                <td>{product.phongban}</td>
-                <td>{product.loaisp}</td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
+  <RevenueChart/>
       </div>
     </MainCard>
   );

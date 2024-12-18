@@ -3,6 +3,7 @@ import { Form, Input, Select, Button, Upload, message, Modal, Tag, Space, Typogr
 import { CloseOutlined, UploadOutlined, PlusOutlined, CheckCircleTwoTone } from '@ant-design/icons';
 import { useEffect } from 'react';
 import axios from 'axios';
+import server from 'constant/linkapi';
 
 const ProductForm = ({ addProduct, show, setShow }) => {
   const [form] = Form.useForm();
@@ -16,7 +17,6 @@ const ProductForm = ({ addProduct, show, setShow }) => {
   const [uploadedImages, setUploadedImages] = useState([]);
   const [hoveredImage, setHoveredImage] = useState(null);
   const [mainImage, setMainImage] = useState(null); // ID của ảnh chính
-  const server = 'https://bb03-2402-800-61c5-f47b-9c3e-7ca6-8bac-795a.ngrok-free.app';
 
   const normFile = (e) => {
     if (Array.isArray(e)) {
@@ -106,6 +106,7 @@ const handleImageUpload = ({ fileList }) => {
     const productData = {
       name: value.productName,
       description: value.description,
+      price: value.price,
       categoryId: categoryId,
       images: uploadedImages.map((img) => {
         return img.id === mainImage

@@ -1,27 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Modal, Table } from 'react-bootstrap';
-import {Collapse, Form, Input} from 'antd';
+import {Modal, Table } from 'react-bootstrap';
+import {Collapse, Form, Input,Button,Select} from 'antd';
 import MainCard from '../Card/MainCard';
 import './ProductManagement.css';
 import ProductForm from './ProductForm.jsx';
 import ProductEdit from './ProductEdit.jsx';
 import server from 'constant/linkapi';
 const ProductManagement = () => {
+  const { Option } = Select;
   const [form] = Form.useForm();
-  const [showModal, setShowModal] = useState(false);
-  const [selectedUser, setSelectedUser] = useState(null);
-  const [show, setShow] = useState(false)
-  const [showModalSua, setShowModalSua] = useState(false);
-  const [showSua, setShowSua] = useState(false)
-  const [accept,setAccept]=useState(false);
   const [pending,setPending]=useState(true);
   const [isLoad,setIsLoad]=useState(false);
   const [findID, setfindID] = useState('');
-  // Sample data - replace with your actual data source
+  const [findStatus,setfindStatus]=useState('');
+  const selectedStatus=[
+    {id:1,name:'PENDING'},
+    {id:2,name:'SUCCESS'},
+    {id:3,name:'PAYMENT_CONFIRMED'}
+  ]
   const [Orders, setOrders] = useState([]);
    useEffect(() => {
      const fetchPro = async () => {
-       const apiUrl =server+`/order/admin/payment-success?page=0&size=100`;
+       const apiUrl =server+`/order/admin/payment-success?page=0&size=10`;
        try {
          const res = await fetch(apiUrl, {
            headers: {
@@ -49,6 +49,7 @@ const Accept = async (id) => {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
+      'Ngrok-Skip-Browser-Warning': 1
     },
     
     body: JSON.stringify(bodyid),
@@ -56,13 +57,68 @@ const Accept = async (id) => {
   setIsLoad(!isLoad)
   return;
 }
-const find = (value) =>{
-  console.log(findID)
-}
-const Reject =(id)=>{
-     setAccept(false);
-     setPending(true);
-}
+//Tìm kiếm theo id
+const funcfindID= async () => {
+  const apiUrl = `${server}/order/admin/${findID}`; // URL tìm kiếm
+  try {
+    const res = await fetch(apiUrl, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Ngrok-Skip-Browser-Warning': 1,
+      },
+    });
+    const data = await res.json();
+    if (data) {
+      setOrders([data.data]); // Đặt kết quả vào danh sách đơn hàng
+    } else {
+      console.error("Không tìm thấy đơn hàng!");
+      setOrders([]);
+    }
+  } catch (error) {
+    console.error("Lỗi khi tìm kiếm đơn hàng:", error);
+    setOrders([]);
+  }
+};
+// Tim kiem theo ma
+const funcfindStatus = async () => {
+  const apiUrl = server+`/order/admin?page=0&size=10&status=${findStatus}`; // URL tìm kiếm
+  try {
+    const res = await fetch(apiUrl, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Ngrok-Skip-Browser-Warning': 1,
+      },
+    });
+    
+    const data = await res.json();
+    console.log(data)
+    setOrders(data.data.data); // Đặt kết quả vào danh sách đơn hàng
+  } catch (error) {
+    console.error("Lỗi khi tìm kiếm đơn hàng:", error);
+    setOrders([]);
+  }
+};
+//Reset kết quả tìm kiếm
+const resetSearch = async () => {
+  setfindID(''); // Xóa mã tìm kiếm
+  try {
+    const apiUrl = `${server}/order/admin/payment-success?page=0&size=10`; // API danh sách gốc
+    const res = await fetch(apiUrl, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Ngrok-Skip-Browser-Warning': 1,
+      },
+    });
+    const data = await res.json();
+    setOrders(data.data.data); // Khôi phục danh sách ban đầu
+  } catch (error) {
+    console.error("Lỗi khi reset tìm kiếm:", error);
+  }
+};
+// const Reject =(id)=>{
+//      setAccept(false);
+//      setPending(true);
+// }
 const text="ds"
 const items = Orders.map((Order) => ({
   key: Order.id,
@@ -115,21 +171,50 @@ const items = Orders.map((Order) => ({
     <MainCard title="Xem danh sách đơn hàng">
       <div className="product-management">
         <div className="management-header">
-          <div className="management-actions">
-          <Form form={form} onFinish={find} layout="horizontal">
-          <div >
-          <Button 
-              className="action-button add-button"
-              type="primary" htmlType="submit"
-              >
-              <i className="feather icon-plus" />
-              Tìm kiếm đơn hàng : 
-            </Button>
-            <Input value={findID} onChange={(e) => setfindID(e.target.value)} />
-          </div>
-          
-            </Form>
-          </div>
+        <div className="management-actions">
+  <Input 
+    value={findID} 
+    onChange={(e) => setfindID(e.target.value)} 
+    placeholder="Nhập mã đơn hàng" 
+    style={{ width: '250px' }} /* Đặt chiều rộng cho Input */
+  />
+  <Button 
+    className="action-button add-button"
+    type="primary"
+    onClick={funcfindID} /* Gọi hàm tìm kiếm theo mã */
+  >
+    Tìm theo mã
+  </Button>
+  
+  <Select
+    placeholder="Chọn trạng thái"
+    value={findStatus}
+    onChange={(value) => setfindStatus(value)}
+    style={{ width: '200px' }} /* Đặt chiều rộng cho Select */
+  >
+    {selectedStatus.map((status) => (
+      <Option key={status.id} value={status.name}>
+        {status.name}
+      </Option>
+    ))}
+  </Select>
+  <Button 
+    className="action-button add-button"
+    type="primary"
+    onClick={funcfindStatus} /* Gọi hàm tìm kiếm theo trạng thái */
+  >
+    Tìm theo trạng thái
+  </Button>
+
+  <Button 
+    className="action-button reset-button"
+    type="default"
+    onClick={resetSearch} /* Gọi hàm reset */
+  >
+    Reset
+  </Button>
+</div>
+
         </div>
 
         <div className="product-management collapse-container" style={{ marginLeft: '0' }}>

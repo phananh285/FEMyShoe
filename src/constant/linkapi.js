@@ -1,2 +1,2 @@
-const server="https://d4b9-2402-800-61c5-f47b-8899-2ec5-cc5-b56c.ngrok-free.app"
+const server="https://9627-2402-800-61c5-de7-789b-e774-f166-4b43.ngrok-free.app"
 export default server;
