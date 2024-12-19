@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Modal,Table} from 'react-bootstrap';
-import { Form, Input} from 'antd';
+import { Form, Input,Collapse} from 'antd';
 import MainCard from '../Card/MainCard';
 import './ProductManagement.css';
 import ProductForm from './ProductForm.jsx';
@@ -18,10 +18,11 @@ const ProductManagement = () => {
   const [totalPages, setTotalPages] = useState(0); 
   const [findID, setfindID] = useState('');
   const [findName,setfindName]=useState('');
+
   useEffect(() => {
     const fetchPro = async () => {
    
-      const apiUrl =server+`/product?page=0&size=10&sortBy=id_desc`;
+      const apiUrl =server+`/product/admin?size=35&sortBy=id_desc&page=0`;
       try {
         const res = await fetch(apiUrl, {
           headers: {
@@ -111,13 +112,9 @@ const funcfindName = async () =>{
     setShow(true);
   };
 
-  const handleShowModalSua = () => {
+  const handleShowModalSua = (item) => {
     setShowSua(true);
-  };
-
-  const handleFileImport = (event) => {
-    const file = event.target.files[0];
-    console.log('Importing file:', file);
+    setSelectedProduct(item)
   };
 
   const handleConfirmDelete = (id) => {
@@ -140,6 +137,100 @@ const resetSearch = async () => {
     console.error("Lỗi khi reset tìm kiếm:", error);
   }
 };
+//Item tra ve
+const items = products.map((Order) => ({
+  key: Order.id,
+  label: (
+    <div>
+ Mã sản phẩm : {Order.id} || Tên sản phẩm:  {Order.name} || Mô tả:  {Order.description} || Mã thể loại : {Order.categoryId} || Ngày tạo :       
+  {Order.createdAt} || Ngày cập nhất : {Order.updatedAt} || Giá :  {Order.price}
+<br/>
+{Order.images?.filter((img) => !img.isPrimary).map((image, index) => (
+      <img
+        key={index}
+        src={image.url} // Đường dẫn URL của ảnh
+        alt={`Image ${index}`}
+        style={{ width: '50px', height: '50px', objectFit: 'cover', margin: '5px' }}
+      />
+    ))}
+          <button
+          className="edit-btn"
+          onClick={() => handleShowModalSua(Order)} >
+          <i className="feather icon-edit-2" />
+          Sửa
+        </button>
+        {showSua && (
+  <ProductEdit showSua={showSua} setShowSua={setShowSua} selectedProduct={selectedProduct} UpdateProduct={updatePro}/>
+)} 
+
+        <button
+          className="delete-btn"
+          onClick={() => handleConfirmDelete(Order.id)}
+        >
+          <i className="feather icon-trash-2" />
+          Xóa
+        </button>
+        <Modal show={confirmDelete.show} onHide={() => setConfirmDelete({ show: false, productId: null })}>
+        <Modal.Header closeButton>
+          <Modal.Title>Xác nhận xóa</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Bạn có chắc chắn muốn xóa sản phẩm này không?</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setConfirmDelete({ show: false, productId: null })}>
+            Hủy
+          </Button>
+          <Button variant="danger" onClick={() => deletePro(confirmDelete.productId)}>
+            Xóa
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </div>
+  ),
+  children: (
+    <div>
+      <Table>
+        <thead>
+          <tr>
+            <th className='text'>Mã sản phẩm loại</th>
+            <th>Giá</th>
+            <th>Số lượng</th>
+            <th>Ảnh minh họa</th>
+            <th>Kích cỡ</th>
+          </tr>
+        </thead>
+        <tbody>
+ 
+  {Order.variants?.map((item) => {
+    // Tìm ảnh có isPrimary=true
+    const primaryImage = Order.images?.find((img) => img.isPrimary);
+
+    return (
+      <tr key={item.id}>
+        <td>{item.id}</td>
+        <td>{item.price}</td>
+        <td>{item.stock}</td>
+        <td>
+          {primaryImage ? (
+            <img
+              src={primaryImage.url} // Đường dẫn URL của ảnh
+              alt="Primary Image"
+              style={{ width: '50px', height: '50px', objectFit: 'cover' }}
+            />
+          ) : (
+            "Không có ảnh chính"
+          )}
+        </td>
+        <td>{item.attributes["kích cỡ"]}</td>
+      </tr>
+    );
+  })}
+</tbody>
+
+      </Table>
+    </div>
+  ),
+}));
+
   return (
     <MainCard title="Quản lý sản phẩm">
       <div className="product-management">
@@ -173,16 +264,7 @@ const resetSearch = async () => {
   >
     Reset
   </Button>
-            <label className="action-button import-button" style={{ margin: 0 }}>
-              <i className="feather icon-upload" />
-              Import Excel
-              <input
-                type="file"
-                accept=".xlsx,.xls"
-                style={{ display: 'none' }}
-                onChange={handleFileImport}
-              />
-            </label>
+        
           </div>
         </div>
         {show && (
@@ -192,7 +274,7 @@ const resetSearch = async () => {
             addProduct={addPro}
           />
         )}
-        <div className="pagination-controls">
+        {/* <div className="pagination-controls">
              <Button variant="secondary" disabled={currentPage === 0} onClick={handlePrevPage}>
             Previous
             </Button>
@@ -200,76 +282,17 @@ const resetSearch = async () => {
             <Button variant="primary" disabled={currentPage === totalPages - 1} onClick={handleNextPage}>
             Next
             </Button>
-        </div>
-        <Table responsive className="product-table">
-                 
-          <thead>
-            <tr>
-              <th className='text'>Mã sản phẩm</th>
-              <th>Tên sản phẩm</th>
-              <th>Giá</th>
-              <th>Số lượng bán ra</th>
-              <th>Đánh giá</th>
-              <th>Ảnh minh họa</th>
-              <th>Danh mục</th>
-              <th>Ngày tạo</th>
-              <th>Ngày cập nhật</th>
-              <th>Thao tác</th>
-            </tr>
-          </thead>
-          <tbody>
-            {products.map((product) => (
-              <tr key={product.id}>
-                <td>{product.id}</td>
-                <td>{product.name}</td>
-                <td>{product.price}</td>
-                <td>{product.sold}</td>
-                <td>{product.rating}</td>
-                <td><img src={product.imageUrl} alt="product" /></td>
-                <td>{product.categoryId}</td>
-                <td>{product.createdAt}</td>
-                <td>{product.updatedAt}</td>
-                <td className="action-cell">
-                  <button
-                    className="edit-btn"
-                    onClick={() => handleShowModalSua()} >
-                    <i className="feather icon-edit-2" />
-                    Sửa
-                  </button>
-                  {showSua && (
-                    <ProductEdit showSua={showSua} setShowSua={setShowSua} selectedProduct={product.id} UpdateProduct={updatePro}/>
-                  )}
-
-                  <button
-                    className="delete-btn"
-                    onClick={() => handleConfirmDelete(product.id)}
-                  >
-                    <i className="feather icon-trash-2" />
-                    Xóa
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
+        </div> */}
+ 
         
       </div>
 
-      <Modal show={confirmDelete.show} onHide={() => setConfirmDelete({ show: false, productId: null })}>
-        <Modal.Header closeButton>
-          <Modal.Title>Xác nhận xóa</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>Bạn có chắc chắn muốn xóa sản phẩm này không?</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setConfirmDelete({ show: false, productId: null })}>
-            Hủy
-          </Button>
-          <Button variant="danger" onClick={() => deletePro(confirmDelete.productId)}>
-            Xóa
-          </Button>
-        </Modal.Footer>
-      </Modal>
+ 
+           <div className="product-management collapse-container" style={{ marginLeft: '0' }}>
+         <Collapse items={items} /> 
+          </div>
     </MainCard>
+
   );
 };
 

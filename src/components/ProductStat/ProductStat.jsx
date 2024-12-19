@@ -15,7 +15,7 @@ const ProductManagement = () => {
   const [showSua, setShowSua] = useState(false);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-
+  const [revenueData,setRevenueData]=useState(0);
   // Sample data - replace with your actual data source
   const [products, setProducts] = useState([
     { id: 1, name: 'Product 1', category: 'Category A', price: 100, phongban: "mua ban", loaisp: "abc" },
@@ -47,12 +47,15 @@ const ProductManagement = () => {
     <div className="date-picker-group">
       <label>Ngày bắt đầu:</label>
       <div className="date-picker-wrapper">
-        <DatePicker
-          selected={startDate}
-          onChange={(date) => setStartDate(date)}
-          dateFormat="dd-MM-yyyy"
-          className="date-picker"
-        />
+      <DatePicker
+  selected={startDate}
+  onChange={(date) => setStartDate(date)}
+  dateFormat="MM/yyyy"
+  showMonthYearPicker
+  className="date-picker"
+/>
+
+
         <FaCalendarAlt className="date-picker-icon" />
       </div>
     </div>
@@ -60,12 +63,14 @@ const ProductManagement = () => {
     <div className="date-picker-group">
       <label>Ngày kết thúc:</label>
       <div className="date-picker-wrapper">
-        <DatePicker
-          selected={endDate}
-          onChange={(date) => setEndDate(date)}
-          dateFormat="dd-MM-yyyy"
-          className="date-picker"
-        />
+      <DatePicker
+  selected={endDate}
+  onChange={(date) => setEndDate(date)}
+  dateFormat="MM/yyyy"
+  showMonthYearPicker
+  className="date-picker"
+/>
+
         <FaCalendarAlt className="date-picker-icon" />
       </div>
     
@@ -77,7 +82,7 @@ const ProductManagement = () => {
   </Button>
 </div>
         </div>
-  <RevenueChart/>
+  <RevenueChart revenueData={revenueData}/>
       </div>
     </MainCard>
   );

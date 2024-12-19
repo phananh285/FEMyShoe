@@ -119,7 +119,7 @@ const resetSearch = async () => {
 //      setAccept(false);
 //      setPending(true);
 // }
-const text="ds"
+
 const items = Orders.map((Order) => ({
   key: Order.id,
   label: (
@@ -214,12 +214,10 @@ const items = Orders.map((Order) => ({
     Reset
   </Button>
 </div>
-
         </div>
-
         <div className="product-management collapse-container" style={{ marginLeft: '0' }}>
   <Collapse items={items} />
-</div>
+    </div>
 
       </div>
     </MainCard>

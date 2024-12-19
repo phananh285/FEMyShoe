@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import * as d3 from 'd3';
 import axios from 'axios';
 
-const RevenueChart = () => {
+const RevenueChart = (revenueData3) => {
   // State để lưu trữ dữ liệu từ backend
   const [revenueData, setRevenueData] = useState([]);
  

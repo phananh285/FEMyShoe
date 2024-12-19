@@ -5,11 +5,11 @@ import { useEffect } from 'react';
 import axios from 'axios';
 import server from 'constant/linkapi';
 const ProductForm = ({ UpdateProduct, showSua, setShowSua,selectedProduct }) => {
+
   const [form] = Form.useForm();
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
-  const [stocks, setStocks] = useState([]);
   const [selectedVariants, setSelectedVariants] = useState([]); // Danh sách các size đã chọn
   const [categoryId, setCategoryId] = useState('');
   const [categories, setCategories] = useState([]);
@@ -17,7 +17,7 @@ const ProductForm = ({ UpdateProduct, showSua, setShowSua,selectedProduct }) => 
   const [hoveredImage, setHoveredImage] = useState(null);
   const [mainImage, setMainImage] = useState(null); // ID của ảnh chính
 
-
+  console.log(selectedProduct)
   const normFile = (e) => {
     if (Array.isArray(e)) {
       return e;
@@ -28,6 +28,43 @@ const ProductForm = ({ UpdateProduct, showSua, setShowSua,selectedProduct }) => 
   // useEffect(() => {
   //   form.setFieldsValue({ uploadedImages });
   // }, [uploadedImages]);
+  useEffect(() => {
+    if (selectedProduct) {
+      // Thiết lập các giá trị mặc định từ sản phẩm được chọn
+      form.setFieldsValue({
+        productName: selectedProduct.name,
+        price: selectedProduct.price,
+        description: selectedProduct.description,
+        category: selectedProduct.categoryId,
+      });
+  
+      // Thiết lập ảnh đã tải lên
+      setUploadedImages(
+        selectedProduct.images?.map((img) => ({
+          id: img.id,
+          url: img.url,
+        }))
+      );
+  
+      // Xác định ảnh chính
+      const primaryImage = selectedProduct.images?.find((img) => img.isPrimary);
+      if (primaryImage) {
+        setMainImage(primaryImage.id);
+      }
+  
+      // Thiết lập variants
+      setSelectedVariants(
+        selectedProduct.variants?.map((variant) => ({
+          size: variant.attributes["kích cỡ"], // Lấy kích cỡ từ thuộc tính
+          stock: variant.stock,
+          price: variant.price,
+        }))
+      );
+  
+      setCategoryId(selectedProduct.categoryId);
+    }
+  }, []);
+  
 
   useEffect(() => {
     const fetchCategory = async () => {
@@ -127,7 +164,7 @@ const handleImageUpload = ({ fileList }) => {
     console.log(productData);
     
     // Gọi hàm addProduct với dữ liệu sản phẩm
-    UpdateProduct(selectedProduct,productData);
+    UpdateProduct(selectedProduct.id,productData);
     setShowSua(false);
   };
   
@@ -152,45 +189,85 @@ const handleImageUpload = ({ fileList }) => {
           <Input value={description} onChange={(e) => setDescription(e.target.value)} />
         </Form.Item>
         <Form.Item label="Danh sách kích cỡ">
-          <Space.Compact>
-            <Form.Item name={['variants', 'size']} noStyle>
-              <Input placeholder="size" />
-            </Form.Item>
-            <Form.Item name={['variants', 'stock']} noStyle>
-              <Input placeholder="stock" />
-            </Form.Item>
-            <Form.Item name={['variants', 'price']} noStyle>
-              <Input placeholder="price" />
-            </Form.Item>
-            <Button
-              type="dashed"
-              icon={<PlusOutlined />}
-              onClick={() => {
-                const size = form.getFieldValue(['variants', 'size']);
-                const stock = form.getFieldValue(['variants', 'stock']);
-                const price = form.getFieldValue(['variants', 'price']);
+  {selectedVariants?.map((variant, index) => (
+    <div key={index} style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+      <Input
+        style={{ width: '100px' }}
+        value={variant.size}
+        onChange={(e) => {
+          const updatedVariants = [...selectedVariants];
+          updatedVariants[index].size = e.target.value;
+          setSelectedVariants(updatedVariants);
+        }}
+        placeholder="Size"
+      />
+      <Input
+        style={{ width: '100px' }}
+        value={variant.stock}
+        onChange={(e) => {
+          const updatedVariants = [...selectedVariants];
+          updatedVariants[index].stock = e.target.value;
+          setSelectedVariants(updatedVariants);
+        }}
+        placeholder="Stock"
+      />
+      <Input
+        style={{ width: '100px' }}
+        value={variant.price}
+        onChange={(e) => {
+          const updatedVariants = [...selectedVariants];
+          updatedVariants[index].price = e.target.value;
+          setSelectedVariants(updatedVariants);
+        }}
+        placeholder="Price"
+      />
+      <Button
+        type="danger"
+        icon={<CloseOutlined />}
+        onClick={() => {
+          const updatedVariants = selectedVariants.filter((_, i) => i !== index);
+          setSelectedVariants(updatedVariants);
+        }}
+      >
+        Xóa
+      </Button>
+    </div>
+  ))}
 
-                if (size && stock && price) {
-                  setSelectedVariants((prevVariants) => [
-                    ...prevVariants,
-                    { size, stock, price }
-                  ]);
-                  form.resetFields(['variants']);
-                } else {
-                  message.warning('Vui lòng nhập đầy đủ thông tin size, stock, và price!');
-                }
-              }}
-            >
-              Thêm
-            </Button>
-          </Space.Compact>
-        </Form.Item>
+  <Space.Compact>
+    <Form.Item name={['variants', 'size']} noStyle>
+      <Input placeholder="size" />
+    </Form.Item>
+    <Form.Item name={['variants', 'stock']} noStyle>
+      <Input placeholder="stock" />
+    </Form.Item>
+    <Form.Item name={['variants', 'price']} noStyle>
+      <Input placeholder="price" />
+    </Form.Item>
+    <Button
+      type="dashed"
+      icon={<PlusOutlined />}
+      onClick={() => {
+        const size = form.getFieldValue(['variants', 'size']);
+        const stock = form.getFieldValue(['variants', 'stock']);
+        const price = form.getFieldValue(['variants', 'price']);
 
-        {selectedVariants.map((variant, index) => (
-          <Tag key={index}>
-            Size: {variant.size}, Stock: {variant.stock}, Price: {variant.price}
-          </Tag>
-        ))}
+        if (size && stock && price) {
+          setSelectedVariants((prevVariants) => [
+            ...prevVariants,
+            { size, stock, price }
+          ]);
+          form.resetFields(['variants']);
+        } else {
+          message.warning('Vui lòng nhập đầy đủ thông tin size, stock, và price!');
+        }
+      }}
+    >
+      Thêm
+    </Button>
+  </Space.Compact>
+</Form.Item>
+
 
         <Form.Item
           label="Danh mục"
@@ -223,7 +300,7 @@ const handleImageUpload = ({ fileList }) => {
             fileList={uploadedImages}
             onChange={(fileList) => handleImageUpload(fileList)}
           >
-            {uploadedImages.length >= 5 ? null : (
+            {uploadedImages?.length >= 5 ? null : (
               <div>
                 <PlusOutlined />
                 <div style={{ marginTop: 8 }}>Upload</div>
@@ -232,7 +309,7 @@ const handleImageUpload = ({ fileList }) => {
           </Upload>
 
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '10px' }}>
-            {uploadedImages.map((image) => (
+            {uploadedImages?.map((image) => (
               <div
                 key={image.id}
                 className="image-container"
