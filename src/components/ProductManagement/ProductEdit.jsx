@@ -17,7 +17,7 @@ const ProductForm = ({ UpdateProduct, showSua, setShowSua,selectedProduct }) => 
   const [hoveredImage, setHoveredImage] = useState(null);
   const [mainImage, setMainImage] = useState(null); // ID của ảnh chính
 
-  console.log(selectedProduct)
+  // console.log(selectedProduct)
   const normFile = (e) => {
     if (Array.isArray(e)) {
       return e;
@@ -58,12 +58,13 @@ const ProductForm = ({ UpdateProduct, showSua, setShowSua,selectedProduct }) => 
           size: variant.attributes["kích cỡ"], // Lấy kích cỡ từ thuộc tính
           stock: variant.stock,
           price: variant.price,
+          skuCode: variant.skuCode,
         }))
       );
-  
+      
       setCategoryId(selectedProduct.categoryId);
     }
-  }, []);
+  }, [selectedProduct]);
   
 
   useEffect(() => {
@@ -137,12 +138,13 @@ const handleImageUpload = ({ fileList }) => {
   };
 
   const submitForm = (value) => {
-    console.log("selected product: ",selectedProduct)
+    console.log("value trong form: ",value)
     // Tạo dữ liệu sản phẩm, chỉ định ảnh chính
     const productData = {
       name: value.productName,
       description: value.description,
       categoryId: categoryId,
+      
       images: uploadedImages.map((img) => {
         return img.id === mainImage
           ? { id: img.id, isPrimary: true } // Chỉ định ảnh chính
@@ -158,11 +160,12 @@ const handleImageUpload = ({ fileList }) => {
         price: parseFloat(variant.price), // Chuyển giá sang số thực
         stock: parseInt(variant.stock), // Chuyển stock sang số nguyên
         attributeOptions: [variant.size],
+        skuCode: variant.skuCode,
       })),
     };
   
-    console.log(productData);
-    
+    console.log("data gửi đi: ",productData);
+
     // Gọi hàm addProduct với dữ liệu sản phẩm
     UpdateProduct(selectedProduct.id,productData);
     setShowSua(false);

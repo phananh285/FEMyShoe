@@ -39,9 +39,10 @@ const RevenueChart = (revenueData3) => {
     
     // Mock data cho testing
     const mockData = [
-      { date: '2024-01', revenue: 50000000 },
-      { date: '2024-02', revenue: 65000000 },
-      { date: '2024-03', revenue: 75000000 }
+      { label: '2024-01', value: 90000000 },
+      { label: '2024-04', value: 85000000 },
+      { label: '2024-10', value: 30000000 },
+      { label: '2024-12', value: 20000000 }
     ];
     
     setRevenueData(mockData);
@@ -58,9 +59,10 @@ const RevenueChart = (revenueData3) => {
     d3.select('#revenue-chart').selectAll('*').remove();
 
     // Cấu hình kích thước
-    const margin = { top: 20, right: 30, bottom: 50, left: 70 };
-    const width = 800 - margin.left - margin.right;
-    const height = 400 - margin.top - margin.bottom;
+    const margin = { top: 20, right: 30, bottom: 70, left: 80 };
+    const width = 1100 - margin.left - margin.right; // Tăng chiều rộng
+    const height = 500 - margin.top - margin.bottom;  // Tăng chiều cao
+    
 
     // Tạo SVG container
     const svg = d3
@@ -74,21 +76,21 @@ const RevenueChart = (revenueData3) => {
     // Định dạng scales
     const xScale = d3
       .scalePoint()
-      .domain(revenueData.map(d => d.date))
+      .domain(revenueData.map(d => d.label))
       .range([0, width])
       .padding(0.5);
 
     const yScale = d3
       .scaleLinear()
-      .domain([0, d3.max(revenueData, d => d.revenue)])
+      .domain([0, d3.max(revenueData, d => d.value)])
       .range([height, 0])
       .nice();
 
     // Tạo line generator
     const line = d3
       .line()
-      .x(d => xScale(d.date))
-      .y(d => yScale(d.revenue));
+      .x(d => xScale(d.label))
+      .y(d => yScale(d.value));
 
     // Vẽ line
     svg
@@ -164,7 +166,7 @@ const RevenueChart = (revenueData3) => {
         .tickFormat(d => d.toLocaleString('vi-VN')))
       .append('text')
       .attr('transform', 'rotate(-90)')
-      .attr('y', -60)
+      .attr('y', -72)
       .attr('x', -height / 2)
       .attr('fill', 'black')
       .attr('text-anchor', 'middle')
@@ -173,7 +175,7 @@ const RevenueChart = (revenueData3) => {
 
   return (
     <div className="revenue-chart-container">
-      <h2>Thống kê doanh thu 3 tháng gần nhất</h2>
+      <h5>Thống kê doanh thu trong {revenueData.length} tháng</h5>
       <div id="revenue-chart"></div>
     </div>
   );

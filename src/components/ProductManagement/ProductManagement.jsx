@@ -39,7 +39,7 @@ const ProductManagement = () => {
     };
 
     fetchPro();
-  }, [isLoad,currentPage]);
+  }, [isLoad]);
   const addPro = async (newPro) => {
     await fetch(server+'/product', {
       method: 'POST',
@@ -49,6 +49,11 @@ const ProductManagement = () => {
       },
       body: JSON.stringify(newPro),
     });
+    // setProducts((prevProducts) =>
+    //   prevProducts.map((product) =>
+    //     product.id === id ? { ...product, ...updatedProduct } : product
+    //   )
+    // );
     setIsLoad(!isLoad)
     return;
   };
@@ -71,6 +76,11 @@ const ProductManagement = () => {
       },
     });
     setIsLoad(!isLoad)
+    // setProducts((prevProducts) =>
+    //   prevProducts.map((product) =>
+    //     product.id === id ? { ...product, ...updatedProduct } : product
+    //   )
+    // );
     setConfirmDelete({ show: false, productId: null });
     return;
   };
@@ -95,17 +105,23 @@ const funcfindName = async () =>{
     setOrders([]);
   }
 }
-  const updatePro = async (id,product) => {
+  const updatePro = async (id,updatedProduct) => {
     await fetch(server+`/product/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
         'Ngrok-Skip-Browser-Warning': 1
       },
-      body: JSON.stringify(product),
+      body: JSON.stringify(updatedProduct),
     });
     setIsLoad(!isLoad)
-    return;
+        // Cập nhật danh sách sản phẩm trong trạng thái
+    // setProducts((prevProducts) =>
+    //   prevProducts.map((product) =>
+    //     product.id === id ? { ...product, ...updatedProduct } : product
+    //   )
+    // );
+   return;
   };
 
   const handleShowModal = () => {
@@ -159,6 +175,7 @@ const items = products.map((Order) => ({
           <i className="feather icon-edit-2" />
           Sửa
         </button>
+    
         {showSua && (
   <ProductEdit showSua={showSua} setShowSua={setShowSua} selectedProduct={selectedProduct} UpdateProduct={updatePro}/>
 )} 

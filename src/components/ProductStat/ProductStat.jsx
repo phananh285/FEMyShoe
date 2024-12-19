@@ -6,6 +6,10 @@ import MainCard from '../Card/MainCard';
 import './ProductManagement.css';
 import { FaCalendarAlt } from 'react-icons/fa';
 import RevenueChart from 'components/RevenueChart';
+import { ConsoleSqlOutlined } from '@ant-design/icons';
+import TopProductsChart from 'components/TopProductChart';
+import PieChartProduct from 'components/PieChartProduct'
+import PieBasicChart from 'views/charts/nvd3-chart/chart/PieBasicChart';
 
 const ProductManagement = () => {
   const [showModal, setShowModal] = useState(false);
@@ -15,29 +19,21 @@ const ProductManagement = () => {
   const [showSua, setShowSua] = useState(false);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [revenueData,setRevenueData]=useState(0);
+  const [revenueData,setRevenueData]=useState([]);
   // Sample data - replace with your actual data source
   const [products, setProducts] = useState([
     { id: 1, name: 'Product 1', category: 'Category A', price: 100, phongban: "mua ban", loaisp: "abc" },
     { id: 2, name: 'Product 2', category: 'Category B', price: 200, phongban: "mua ban", loaisp: "abcd" },
   ]);
 
-  useEffect(() => {
-    const fetchPro = async (startDate,endDate) => {
-      const apiUrl = '';
-      try {
-        const res = await fetch(apiUrl);
-        const data = await res.json();
-        setPro(data);
-      } catch (error) {
-        console.log('Error fetching data', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPro();
-  }, []);
+  const Gatherdata=  () => {
+  
+  console.log(ConvertDate(startDate))
+  console.log(ConvertDate(endDate))
+  };
+  const ConvertDate = (date)=>{
+    return new Date(date).getTime();
+  }
   return (
     <MainCard title="Thống kê">
       <div className="product-management">
@@ -77,13 +73,22 @@ const ProductManagement = () => {
     </div>
   </div>
 
-  <Button variant="primary" className="statistic-button" onClick={(startDate,endDate) => fetchPro()}>
+  <Button variant="primary" className="statistic-button" onClick={(startDate,endDate) => Gatherdata(startDate,endDate)}>
     Thống kê
   </Button>
 </div>
         </div>
-  <RevenueChart revenueData={revenueData}/>
+
       </div>
+      <RevenueChart revenueData={revenueData}/>
+    
+        <TopProductsChart/>
+ 
+
+ 
+        <PieChartProduct/>
+      
+
     </MainCard>
   );
 };
