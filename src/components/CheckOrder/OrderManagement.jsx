@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {Modal, Table } from 'react-bootstrap';
-import {Collapse, Form, Input,Button,Select} from 'antd';
+import {Collapse, Form, Input,Button,Select,Pagination} from 'antd';
 import MainCard from '../Card/MainCard';
 import './ProductManagement.css';
 import ProductForm from './ProductForm.jsx';
@@ -13,6 +13,9 @@ const ProductManagement = () => {
   const [isLoad,setIsLoad]=useState(false);
   const [findID, setfindID] = useState('');
   const [findStatus,setfindStatus]=useState('');
+  const [pageSize, setPageSize] = useState(10);
+    const [currentPage, setCurrentPage] = useState(0);  // Current page number
+    const [totalPages, setTotalPages] = useState(0); 
   const selectedStatus=[
     {id:1,name:'PENDING'},
     {id:2,name:'SUCCESS'},
@@ -21,7 +24,7 @@ const ProductManagement = () => {
   const [Orders, setOrders] = useState([]);
    useEffect(() => {
      const fetchPro = async () => {
-       const apiUrl =server+`/order/admin/payment-success?page=0&size=10`;
+       const apiUrl =server+`/order/admin?page=0&size=12`;
        try {
          const res = await fetch(apiUrl, {
            headers: {
@@ -32,6 +35,7 @@ const ProductManagement = () => {
          const data = await res.json();
          console.log(data)
          setOrders(data.data.data);
+         setTotalPages(data.data.totalPage);
         // setTotalPages(data.data.totalPage);
        } catch (error) {
          console.log('Error fetching data', error);
@@ -119,7 +123,22 @@ const resetSearch = async () => {
 //      setAccept(false);
 //      setPending(true);
 // }
-
+const ChangePage = async (page, size) => {
+  const apiUrl = server + `/order/admin?page=${page-1}&size=${size}`;
+  try {
+    const res = await fetch(apiUrl, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Ngrok-Skip-Browser-Warning': 1,
+      },
+    });
+    const data = await res.json();
+    setOrders(data.data.data);
+    setTotalPages(data.data.totalPage);
+  } catch (error) {
+    console.log('Error fetching data', error);
+  }
+};
 const items = Orders.map((Order) => ({
   key: Order.id,
   label: (
@@ -215,6 +234,19 @@ const items = Orders.map((Order) => ({
   </Button>
 </div>
         </div>
+        <Pagination
+          current={currentPage + 1} // Chuyển từ 0-based sang 1-based
+          total={totalPages * pageSize} // Tổng số sản phẩm
+          pageSize={pageSize}
+          showSizeChanger
+          showQuickJumper
+          onChange={(page, size) => {
+            setCurrentPage(page - 1); // Chuyển từ 1-based sang 0-based
+            setPageSize(size);
+            ChangePage(page, size);
+          }}
+          showTotal={(total) => `Total ${total} items`}
+        />
         <div className="product-management collapse-container" style={{ marginLeft: '0' }}>
   <Collapse items={items} />
     </div>

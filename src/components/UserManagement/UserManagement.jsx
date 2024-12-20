@@ -1,7 +1,7 @@
 import React, { useState,useEffect } from 'react';
 import {Table } from 'react-bootstrap';
 import MainCard from '../Card/MainCard';
-import {Button, Form, Input, Switch, Space} from 'antd';
+import {Button, Form, Input, Switch, Space,Pagination} from 'antd';
 import './ProductManagement.css';
 import server from 'constant/linkapi';
 const ProductManagement = () => {
@@ -13,6 +13,9 @@ const ProductManagement = () => {
   const [isLoad,setIsLoad]=useState(false);
   const [findName,setfindName]=useState('');
   const [UserStatus,setUserStatus]=useState(true);
+    const [pageSize, setPageSize] = useState(10);
+      const [currentPage, setCurrentPage] = useState(0);  // Current page number
+      const [totalPages, setTotalPages] = useState(0); 
   // Sample data - replace with your actual data source
   const [Users, setUser] = useState([
   ]);
@@ -87,18 +90,7 @@ const funcfindId = async () =>{
     setUser([]);
   }
 }
-const setStatus =async ()=>{
-  
-  await fetch(server+`/user/9/status?isActive=${UserStatus}`, {
-    method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json',
-      'Ngrok-Skip-Browser-Warning': 1,
-    },
-  });
-  setIsLoad(!isLoad)
-  return;
-}
+
 //Reset kết quả tìm kiếm
 const resetSearch = async () => {
   // Xóa mã tìm kiếm
@@ -164,18 +156,23 @@ const resetSearch = async () => {
           <div >
     
           </div>
-            <label className="action-button import-button" style={{ margin: 0 }}>
-              <i className="feather icon-upload" />
-              Import Excel
-              <input
-                type="file"
-                accept=".xlsx,.xls"
-                style={{ display: 'none' }}
-                onChange={handleFileImport}
-              />
-            </label>
+      
           </div>
+          
         </div>
+        {/* <Pagination
+          current={currentPage + 1} // Chuyển từ 0-based sang 1-based
+          total={totalPages * pageSize} // Tổng số sản phẩm
+          pageSize={pageSize}
+          showSizeChanger
+          showQuickJumper
+          onChange={(page, size) => {
+            setCurrentPage(page - 1); // Chuyển từ 1-based sang 0-based
+            setPageSize(size);
+            ChangePage(page, size);
+          }}
+          showTotal={(total) => `Total ${total} items`}
+        /> */}
         <Table responsive className="product-table">
           <thead>
             <tr>

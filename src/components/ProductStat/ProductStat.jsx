@@ -20,16 +20,27 @@ const ProductManagement = () => {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [revenueData,setRevenueData]=useState([]);
-  // Sample data - replace with your actual data source
-  const [products, setProducts] = useState([
-    { id: 1, name: 'Product 1', category: 'Category A', price: 100, phongban: "mua ban", loaisp: "abc" },
-    { id: 2, name: 'Product 2', category: 'Category B', price: 200, phongban: "mua ban", loaisp: "abcd" },
-  ]);
+
+
 
   const Gatherdata=  () => {
   
   console.log(ConvertDate(startDate))
   console.log(ConvertDate(endDate))
+  // const res = await fetch(server+`/product/${id}`, {
+  //   method: 'DELETE',
+  //   headers: {
+  //     'Content-Type': 'application/json',
+  //   },
+  // });
+  // setIsLoad(!isLoad)
+  // // setProducts((prevProducts) =>
+  // //   prevProducts.map((product) =>
+  // //     product.id === id ? { ...product, ...updatedProduct } : product
+  // //   )
+  // // );
+  // setConfirmDelete({ show: false, productId: null });
+  // return;
   };
   const ConvertDate = (date)=>{
     return new Date(date).getTime();
@@ -80,14 +91,7 @@ const ProductManagement = () => {
         </div>
 
       </div>
-      <RevenueChart revenueData={revenueData}/>
-    
-        <TopProductsChart/>
- 
-
- 
-        <PieChartProduct/>
-      
+      <RevenueChart revenueData={revenueData}/>    
 
     </MainCard>
   );

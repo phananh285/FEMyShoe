@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Modal,Table} from 'react-bootstrap';
-import { Form, Input,Collapse} from 'antd';
+import { Form, Input,Collapse,Pagination} from 'antd';
 import MainCard from '../Card/MainCard';
 import './ProductManagement.css';
 import ProductForm from './ProductForm.jsx';
@@ -18,11 +18,12 @@ const ProductManagement = () => {
   const [totalPages, setTotalPages] = useState(0); 
   const [findID, setfindID] = useState('');
   const [findName,setfindName]=useState('');
+  const [pageSize, setPageSize] = useState(10); // Kích thước mặc định
 
   useEffect(() => {
     const fetchPro = async () => {
    
-      const apiUrl =server+`/product/admin?size=35&sortBy=id_desc&page=0`;
+      const apiUrl =server+`/product/admin?size=10&sortBy=id_desc&page=0`;
       try {
         const res = await fetch(apiUrl, {
           headers: {
@@ -40,6 +41,24 @@ const ProductManagement = () => {
 
     fetchPro();
   }, [isLoad]);
+  const ChangePage = async (page, size) => {
+    const apiUrl = server + `/product/admin?size=${size}&sortBy=id_desc&page=${page - 1}`;
+    try {
+      const res = await fetch(apiUrl, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Ngrok-Skip-Browser-Warning': 1,
+        },
+      });
+      const data = await res.json();
+      setProducts(data.data.data);
+      setTotalPages(data.data.totalPage);
+    } catch (error) {
+      console.log('Error fetching data', error);
+    }
+  };
+  
+
   const addPro = async (newPro) => {
     await fetch(server+'/product', {
       method: 'POST',
@@ -301,7 +320,20 @@ const items = products.map((Order) => ({
             </Button>
         </div> */}
  
-        
+<Pagination
+  current={currentPage + 1} // Chuyển từ 0-based sang 1-based
+  total={totalPages * pageSize} // Tổng số sản phẩm
+  pageSize={pageSize}
+  showSizeChanger
+  showQuickJumper
+  onChange={(page, size) => {
+    setCurrentPage(page - 1); // Chuyển từ 1-based sang 0-based
+    setPageSize(size);
+    ChangePage(page, size);
+  }}
+  showTotal={(total) => `Total ${total} items`}
+/>
+
       </div>
 
  
