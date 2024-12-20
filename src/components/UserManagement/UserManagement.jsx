@@ -13,16 +13,17 @@ const ProductManagement = () => {
   const [isLoad,setIsLoad]=useState(false);
   const [findName,setfindName]=useState('');
   const [UserStatus,setUserStatus]=useState(true);
-    const [pageSize, setPageSize] = useState(10);
+    const [pageSize, setPageSize] = useState(1);
       const [currentPage, setCurrentPage] = useState(0);  // Current page number
-      const [totalPages, setTotalPages] = useState(0); 
+      const [totalPages, setTotalPages] = useState(0);
+      const [totalElements, setTotalElements] = useState(0);  
   // Sample data - replace with your actual data source
   const [Users, setUser] = useState([
   ]);
   useEffect(() => {
     const fetchPro = async () => {
-   
-      const apiUrl =server+`/user`;
+   //sua lại api khi có nhiều người dùng hơn
+      const apiUrl =server+`/user?page=0&size=1`;
       try {
         const res = await fetch(apiUrl, {
           headers: {
@@ -34,6 +35,8 @@ const ProductManagement = () => {
         console.log(data)
         setUserStatus(data.data.data.isActive)
         setUser(data.data.data);
+        setTotalPages(data.data.totalPage);
+        setTotalElements(data.data.totalElements)
         // setTotalPages(data.data.totalPage);
       } catch (error) {
         console.log('Error fetching data', error);
@@ -42,6 +45,7 @@ const ProductManagement = () => {
 
     fetchPro();
   }, [isLoad]);
+
 //hàm tìm kiếm theo tên
   const funcfindName = async () =>{
     const apiUrl = server+`/user/search?username=${findName}`; // URL tìm kiếm
@@ -114,6 +118,22 @@ const resetSearch = async () => {
     console.log('Importing file:', file);
   };
   
+  const ChangePage = async (page, size) => {
+    const apiUrl = server + `/user?page=${page-1}&size=${size}`;
+    try {
+      const res = await fetch(apiUrl, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Ngrok-Skip-Browser-Warning': 1,
+        },
+      });
+      const data = await res.json();
+      setUser(data.data.data);
+      setTotalPages(data.data.totalPage);
+    } catch (error) {
+      console.log('Error fetching data', error);
+    }
+  };
   return (
     <MainCard title="Quản lý người dùng">
       <div className="product-management">
@@ -160,19 +180,20 @@ const resetSearch = async () => {
           </div>
           
         </div>
-        {/* <Pagination
+        <Pagination
           current={currentPage + 1} // Chuyển từ 0-based sang 1-based
-          total={totalPages * pageSize} // Tổng số sản phẩm
-          pageSize={pageSize}
+          total={totalElements} // Tổng số sản phẩm
+          pageSize={1}
           showSizeChanger
           showQuickJumper
+          pageSizeOptions={[1]}
           onChange={(page, size) => {
             setCurrentPage(page - 1); // Chuyển từ 1-based sang 0-based
             setPageSize(size);
             ChangePage(page, size);
           }}
           showTotal={(total) => `Total ${total} items`}
-        /> */}
+        />
         <Table responsive className="product-table">
           <thead>
             <tr>
