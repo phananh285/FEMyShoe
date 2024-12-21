@@ -3,8 +3,8 @@ import React from 'react';
 const menuItems = {
 
   items: [
-  
-    
+
+
     {
       id: 'pages',
       title: 'Pages',
@@ -73,7 +73,7 @@ const menuItems = {
         },
         {
           id: 'ProductStat',
-          title: 'Thống kê số lượng bán ra',
+          title: 'Thống kê',
           type: 'item',
           url: '/ProductStat',
           classes: 'nav-item',

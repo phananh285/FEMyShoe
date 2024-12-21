@@ -8,11 +8,11 @@ const SamplePage = () => {
     <React.Fragment>
       <Row>
         <Col>
-          <Card title="Thống kê số lượng" isOption>
-           
-            <UserPage/>
+          <Card title="Thống kê" isOption>
+
+            <UserPage />
             <p>
-              
+
             </p>
           </Card>
         </Col>
