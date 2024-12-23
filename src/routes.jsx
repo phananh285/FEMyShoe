@@ -39,6 +39,11 @@ const routes = [
   },
   {
     exact: 'true',
+    path: '/ConfirmLogOut',
+    element: lazy(() => import('./views/auth/confirmlogout'))
+  },
+  {
+    exact: 'true',
     path: '/auth/signin-1',
     element: lazy(() => import('./views/auth/signin/SignIn1'))
   },

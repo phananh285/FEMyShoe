@@ -230,7 +230,7 @@ const items = Orders.map((Order) => ({
     type="default"
     onClick={resetSearch} /* Gọi hàm reset */
   >
-    Reset
+    Đặt lại
   </Button>
 </div>
         </div>

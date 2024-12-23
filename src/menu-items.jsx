@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState} from 'react';
 
 const menuItems = {
 
@@ -22,21 +22,13 @@ const menuItems = {
           },
           children: [
             {
-              id: 'signup-1',
-              title: 'Sign up',
+              id: 'logout',
+              title: 'Đăng Xuất',
               type: 'item',
-              url: '/auth/signup-1',
+              url:'/ConfirmLogOut',
               target: true,
               breadcrumbs: false
             },
-            {
-              id: 'signin-1',
-              title: 'Sign in',
-              type: 'item',
-              url: '/auth/signin-1',
-              target: true,
-              breadcrumbs: false
-            }
           ]
         },
         {

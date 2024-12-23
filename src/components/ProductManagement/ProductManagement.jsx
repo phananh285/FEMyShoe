@@ -294,11 +294,11 @@ const items = products.map((Order) => ({
   
 
   <Button 
-    className="action-button reset-button"
+    className="ction-button reset-button"
     type="default"
     onClick={resetSearch} /* Gọi hàm reset */
   >
-    Reset
+    Đặt lại
   </Button>
         
           </div>

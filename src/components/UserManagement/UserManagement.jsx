@@ -171,7 +171,7 @@ const resetSearch = async () => {
     type="default"
     onClick={resetSearch} /* Gọi hàm reset */
   >
-    Reset
+    Đặt lại
   </Button>
           <div >
     
