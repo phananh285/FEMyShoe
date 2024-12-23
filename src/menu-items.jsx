@@ -26,7 +26,7 @@ const menuItems = {
               title: 'Đăng Xuất',
               type: 'item',
               url:'/ConfirmLogOut',
-              target: true,
+              icon: 'feather icon-log-out',
               breadcrumbs: false
             },
           ]

@@ -7,7 +7,8 @@ const API_URL = "/auth/login";
 const Logout= () => {
 
   return (
-    <section className="login-section">
+    <React.Fragment>
+  <section className="login-section">
       <div className="login-container">
         <div className="login-card">
           <h2 className="login-title">Xác nhận đăng xuất ?</h2>
@@ -27,6 +28,8 @@ const Logout= () => {
         </div>
       </div>
     </section>
+    </React.Fragment>
+  
   );
   
   
