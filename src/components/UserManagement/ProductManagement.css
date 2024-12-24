@@ -45,6 +45,8 @@
 .product-table td {
     padding: 12px;
     text-align: left;
+    vertical-align: middle; /* Căn giữa theo chiều dọc */
+    text-align: center; /* Căn giữa theo chiều ngang */
     border-bottom: 1px solid #ddd;
 }
 
@@ -59,6 +61,7 @@
 
 .action-cell {
     display: flex;
+   
     gap: 8px;
 }
 

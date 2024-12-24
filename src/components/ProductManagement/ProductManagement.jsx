@@ -20,6 +20,57 @@ const ProductManagement = () => {
   const [findName, setfindName] = useState('');
   const [pageSize, setPageSize] = useState(10); // Kích thước mặc định
 
+//Fake data
+  const mockProducts = [
+    {
+      id: 1,
+      name: 'Sản phẩm A',
+      description: 'Mô tả sản phẩm A',
+      categoryId: 101,
+      createdAt: '2024-12-01',
+      updatedAt: '2024-12-10',
+      price: 100000,
+      images: [
+        { url: 'src\\components\\ProductManagement\\2204-wallpaper-1600x900.jpg', isPrimary: true },
+        { url: 'src\\components\\ProductManagement\\2204-wallpaper-1600x900.jpg'},
+        { url: 'src\\components\\ProductManagement\\2204-wallpaper-1600x900.jpg'}
+      ],
+      variants: [
+        {
+          id: 'VAR1',
+          price: 120000,
+          stock: 10,
+          attributes: { 'kích cỡ': 'L' },
+        },
+      ],
+    },
+    {
+      id: 2,
+      name: 'Sản phẩm B',
+      description: 'Mô tả sản phẩm B',
+      categoryId: 102,
+      createdAt: '2024-11-15',
+      updatedAt: '2024-12-05',
+      price: 200000,
+      images: [
+        { url: 'https://via.placeholder.com/50', isPrimary: true },
+      ],
+      variants: [
+        {
+          id: 'VAR2',
+          price: 220000,
+          stock: 5,
+          attributes: { 'kích cỡ': 'M' },
+        },
+      ],
+    },
+  ];
+  
+  useEffect(() => {
+    setProducts(mockProducts); // Gán dữ liệu mock vào state
+    setTotalPages(1); // Số trang giả lập
+  }, []);
+  
   useEffect(() => {
     const fetchPro = async () => {
 
@@ -301,14 +352,14 @@ const ProductManagement = () => {
             </Button>
 
 
-            <Button
-              className="action-button reset-button"
-              type="default"
-              onClick={resetSearch} /* Gọi hàm reset */
-            >
-              Reset
-            </Button>
-
+  <Button 
+    className="ction-button reset-button"
+    type="default"
+    onClick={resetSearch} /* Gọi hàm reset */
+  >
+    Đặt lại
+  </Button>
+        
           </div>
         </div>
         {show && (

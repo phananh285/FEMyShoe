@@ -1,0 +1,136 @@
+/* Login Section */
+.login-section {
+    background: linear-gradient(to right, #00ccff, #ffffff); /* Nền gradient xanh */
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  /* Login Container */
+  .login-container {
+    max-width: 400px;
+    width: 100%;
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Hiệu ứng đổ bóng */
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  
+  .login-container:hover {
+    transform: translateY(-5px); /* Hiệu ứng nổi khi hover */
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* Title Styling */
+  .login-title {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #003366; /* Màu xanh đậm */
+  }
+  
+  /* Form Group */
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .form-label {
+    display: block;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #003366; /* Màu xanh đậm */
+  }
+  
+  /* Input Field */
+  .form-input {
+    width: 100%;
+    padding: 10px 15px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.3s ease;
+  }
+  
+  .form-input:focus {
+    border-color: #0066ff;
+    box-shadow: 0 0 5px rgba(0, 102, 255, 0.3); /* Hiệu ứng sáng khi focus */
+  }
+  
+  /* Error Message */
+  .error-message {
+    background: #ffe6e6; /* Màu nền đỏ nhạt */
+    color: #cc0000; /* Màu chữ đỏ */
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    text-align: center;
+  }
+  
+  /* Login Button */
+  .login-button {
+    width: 100%;
+    padding: 12px;
+    background: #0066ff;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s;
+  }
+  
+  .login-button:hover {
+    background: #003366; /* Màu xanh đậm hơn khi hover */
+    transform: scale(1.05);
+  }
+  
+  /* Login Options */
+  .login-options {
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+  }
+  
+  .login-options a {
+    color: #0066ff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  
+  .login-options a:hover {
+    color: #003366; /* Đậm hơn khi hover */
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .login-container {
+      padding: 20px;
+    }
+  
+    .login-title {
+      font-size: 20px;
+    }
+  
+    .login-button {
+      font-size: 14px;
+    }
+  
+    .login-options {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .login-options a {
+      margin-bottom: 10px;
+    }
+  }

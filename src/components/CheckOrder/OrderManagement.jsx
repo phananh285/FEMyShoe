@@ -21,6 +21,45 @@ const ProductManagement = () => {
     { id: 2, name: 'SUCCESS' },
     { id: 3, name: 'PAYMENT_CONFIRMED' }
   ]
+  
+  //Fake data 
+  const mockData=  [{
+    id: 1,
+    user: {
+      fullName: "Nguyễn Văn A",
+      username: "nguyenvana",
+      email: "nguyenvana@example.com",
+    },
+    createdAt: "2024-12-24",
+    totalAmount: 500000,
+    payment: { status: "SUCCESS" },
+    status: "PENDING",
+    orderItems: [
+      { id: 101, quantity: 2, price: 100000, productId: "P001", code: "C001", status: "AVAILABLE" },
+      { id: 102, quantity: 1, price: 300000, productId: "P002", code: "C002", status: "AVAILABLE" },
+    ],
+  },
+  {
+    id: 2,
+    user: {
+      fullName: "Trần Thị B",
+      username: "tranthib",
+      email: "tranthib@example.com",
+    },
+    createdAt: "2024-12-23",
+    totalAmount: 250000,
+    payment: { status: "PENDING" },
+    status: "PAYMENT_CONFIRMED",
+    orderItems: [
+      { id: 201, quantity: 5, price: 50000, productId: "P003", code: "C003", status: "AVAILABLE" },
+    ],
+  },
+]
+  useEffect(() => {
+    setOrders(mockData); // Gán dữ liệu mock vào state
+    setTotalPages(1); // Số trang giả lập
+  }, []);
+
   const [Orders, setOrders] = useState([]);
   useEffect(() => {
     const fetchPro = async () => {
@@ -240,14 +279,14 @@ const ProductManagement = () => {
               Tìm theo trạng thái
             </Button>
 
-            <Button
-              className="action-button reset-button"
-              type="default"
-              onClick={resetSearch} /* Gọi hàm reset */
-            >
-              Reset
-            </Button>
-          </div>
+  <Button 
+    className="action-button reset-button"
+    type="default"
+    onClick={resetSearch} /* Gọi hàm reset */
+  >
+    Đặt lại
+  </Button>
+</div>
         </div>
         <Pagination
           current={currentPage + 1} // Chuyển từ 0-based sang 1-based

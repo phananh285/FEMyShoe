@@ -82,11 +82,7 @@ const ProductManagement = () => {
     setShowSua(true);
   };
 
-  const handleFileImport = (event) => {
-    const file = event.target.files[0];
-    // Implement Excel file import logic here
-    console.log('Importing file:', file);
-  };
+
   return (
     <MainCard title="Quản lý danh mục">
       <div className="product-management">
@@ -98,16 +94,7 @@ const ProductManagement = () => {
               <i className="feather icon-plus"  />
               Thêm danh mục
             </Button>
-            <label className="action-button import-button" style={{ margin: 0 }}>
-              <i className="feather icon-upload" />
-              Import Excel
-              <input
-                type="file"
-                accept=".xlsx,.xls"
-                style={{ display: 'none' }}
-                onChange={handleFileImport}
-              />
-            </label>
+           
           </div>
         </div>
         {show && (

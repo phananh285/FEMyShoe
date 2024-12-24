@@ -1,64 +1,96 @@
-import React from 'react';
-import { Card, Button, Alert } from 'react-bootstrap';
-import { NavLink, Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import './LoginForm.css';
+import fetchAPI from '../config/axiosConfig.js';
 
-import Breadcrumb from '../../../layouts/AdminLayout/Breadcrumb';
+const API_URL = "/auth/login";
 
-import { CopyToClipboard } from 'react-copy-to-clipboard';
+const Login = () => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
-import AuthLogin from './JWTLogin';
+  const submitForm = async (e) => {
+    e.preventDefault();
 
-const Signin1 = () => {
+    // Kiểm tra dữ liệu đầu vào
+    if (!username || !password) {
+      setErrorMessage('Vui lòng nhập đầy đủ thông tin!');
+      return;
+    }
+
+    // Xử lý logic đăng nhập ở đây (có thể gọi API)
+    console.log('username:', username, 'Password:', password);
+    try {
+      const response = await fetchAPI.post(API_URL, { username, password });
+      localStorage.setItem("token",response.token);
+      localStorage.setItem("user",JSON.stringify(response.user));
+      window.location.href="/";
+    } catch (e) {
+      console.log(e);
+      setErrorMessage('Thông tin đăng nhập không chính xác!');
+    }
+
+
+    // Nếu thành công
+    // navigate("/dashboard"); // Chuyển hướng sau khi đăng nhập thành công
+
+    // Xử lý trường hợp thất bại (nếu API trả lỗi)
+  };
+
   return (
-    <React.Fragment>
-      <Breadcrumb />
-      <div className="auth-wrapper">
-        <div className="auth-content">
-          <div className="auth-bg">
-            <span className="r" />
-            <span className="r s" />
-            <span className="r s" />
-            <span className="r" />
-          </div>
-          <Card className="borderless text-center">
-            <Card.Body>
-              <div className="mb-4">
-                <i className="feather icon-unlock auth-icon" />
+    <section className="login-section">
+      <div className="login-container">
+        <div className="login-card">
+          <h2 className="login-title">Đăng Nhập</h2>
+          <form onSubmit={submitForm}>
+            {/* Hiển thị lỗi nếu có */}
+            {errorMessage && (
+              <div className="error-message">
+                {errorMessage}
               </div>
-              <AuthLogin />
-              <p className="mb-2 text-muted">
-                Forgot password?{' '}
-                <NavLink to={'#'} className="f-w-400">
-                  Reset
-                </NavLink>
-              </p>
-              <p className="mb-0 text-muted">
-                Don’t have an account?{' '}
-                <NavLink to="/auth/signup-1" className="f-w-400">
-                  Signup
-                </NavLink>
-              </p>
-              <Alert variant="primary" className="text-start mt-3">
-                User:
-                <CopyToClipboard text="info@codedthemes.com">
-                  <Button variant="outline-primary" as={Link} to="#" className="badge mx-2 mb-2" size="sm">
-                    <i className="fa fa-user" /> info@codedthemes.com
-                  </Button>
-                </CopyToClipboard>
-                <br />
-                Password:
-                <CopyToClipboard text="123456">
-                  <Button variant="outline-primary" as={Link} to="#" className="badge mx-2" size="sm">
-                    <i className="fa fa-lock" /> 123456
-                  </Button>
-                </CopyToClipboard>
-              </Alert>
-            </Card.Body>
-          </Card>
+            )}
+            {/* Số điện thoại */}
+            <div className="form-group">
+              <label htmlFor="username" className="form-label">
+                Nhập tài khoản
+              </label>
+              <input
+                type="tel"
+                id="username"
+                name="username"
+                className="form-input"
+                placeholder="Nhập số điện thoại"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+            </div>
+            {/* Mật khẩu */}
+            <div className="form-group">
+              <label htmlFor="password" className="form-label">
+                Mật khẩu
+              </label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                className="form-input"
+                placeholder="Nhập mật khẩu"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+            {/* Nút đăng nhập */}
+            <button type="submit" className="login-button">
+              Đăng Nhập
+            </button>
+            {/* Tùy chọn khác */}
+            <div className="login-options">
+            </div>
+          </form>
         </div>
       </div>
-    </React.Fragment>
+    </section>
   );
 };
 
-export default Signin1;
+export default Login;

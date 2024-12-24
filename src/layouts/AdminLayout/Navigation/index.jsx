@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext,useState } from 'react';
 
 import { ConfigContext } from '../../../contexts/ConfigContext';
 import useWindowSize from '../../../hooks/useWindowSize';
@@ -8,6 +8,22 @@ import NavContent from './NavContent';
 import navigation from '../../../menu-items';
 
 const Navigation = () => {
+  const [showConfirm, setShowConfirm] = useState(false);
+
+  const handleLogoutClick = () => {
+    setShowConfirm(true);
+  };
+
+  const handleConfirmLogout = () => {
+    // Thực hiện đăng xuất ở đây
+    console.log('Đăng xuất thành công');
+    setShowConfirm(false);
+  };
+
+  const handleCancelLogout = () => {
+    setShowConfirm(false);
+  };
+  
   const configContext = useContext(ConfigContext);
   const { collapseMenu } = configContext.state;
   const windowSize = useWindowSize();
@@ -41,7 +57,15 @@ const Navigation = () => {
   return (
     <React.Fragment>
       <nav className={navClass.join(' ')}>{navContent}</nav>
+      {showConfirm && (
+        <div className="confirm-dialog">
+          <p>Bạn có chắc chắn muốn đăng xuất không?</p>
+          <button onClick={handleConfirmLogout}>Có</button>
+          <button onClick={handleCancelLogout}>Không</button>
+        </div>
+      )}
     </React.Fragment>
+    
   );
 };
 
