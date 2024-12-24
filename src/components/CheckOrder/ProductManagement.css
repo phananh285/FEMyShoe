@@ -1,3 +1,31 @@
+.order-dates {
+    font-size: 16px;
+}
+
+.order-dates .date {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.order-dates .time {
+    display: inline-block;
+}
+
+.order-status {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.order-status .success {
+    color: green;
+    /* Màu xanh lá cho trạng thái SUCCESS */
+}
+
+.order-status .pending {
+    color: gold;
+    /* Màu vàng cho trạng thái PENDING */
+}
+
 .product-management {
     padding: 20px;
 }
@@ -11,19 +39,23 @@
 
 .management-actions {
     display: flex;
-    align-items: center; /* Căn giữa theo chiều dọc */
-    gap: 10px; /* Khoảng cách giữa các phần tử */
+    align-items: center;
+    /* Căn giữa theo chiều dọc */
+    gap: 10px;
+    /* Khoảng cách giữa các phần tử */
     margin-bottom: 20px;
-  }
-  
-  .management-actions .action-button {
-    white-space: nowrap; /* Đảm bảo nút không bị xuống dòng */
-  }
-  
-  .management-actions .ant-select {
-    min-width: 150px; /* Đảm bảo hộp chọn đủ rộng */
-  }
-  
+}
+
+.management-actions .action-button {
+    white-space: nowrap;
+    /* Đảm bảo nút không bị xuống dòng */
+}
+
+.management-actions .ant-select {
+    min-width: 150px;
+    /* Đảm bảo hộp chọn đủ rộng */
+}
+
 
 .action-button {
     display: flex;
@@ -73,7 +105,8 @@
     gap: 8px;
 }
 
-.edit-btn, .delete-btn {
+.edit-btn,
+.delete-btn {
     padding: 6px 12px;
     border: none;
     border-radius: 4px;
@@ -118,11 +151,16 @@
     border: 1px solid #ced4da;
     border-radius: 0.25rem;
 }
+
 .product-management .ant-collapse-content-box {
-    margin-left: 10px; /* Hoặc 20px, điều chỉnh khoảng cách cho vừa */
-  }
+    margin-left: 10px;
+    /* Hoặc 20px, điều chỉnh khoảng cách cho vừa */
+}
+
 /* ProductManagement.css */
 .collapse-container {
-    margin-left: 0; /* Hoặc giá trị bạn muốn */
-    padding-left: 0; /* Hoặc giá trị bạn muốn */
-  }
+    margin-left: 0;
+    /* Hoặc giá trị bạn muốn */
+    padding-left: 0;
+    /* Hoặc giá trị bạn muốn */
+}
