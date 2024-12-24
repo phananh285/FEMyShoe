@@ -20,6 +20,32 @@ const ProductManagement = () => {
   // Sample data - replace with your actual data source
   const [Users, setUser] = useState([
   ]);
+
+    // Dữ liệu giả lập
+    const mockUsers = [
+      {
+        id: 1,
+        username: 'user1',
+        email: 'user1@example.com',
+        fullName: 'User One',
+        avatar: 'src\\components\\UserManagement\\2204-wallpaper-1600x900.jpg',
+        createdAt: '2024-01-01',
+        isActive: true,
+      },
+      {
+        id: 2,
+        username: 'user2',
+        email: 'user2@example.com',
+        fullName: 'User Two',
+        avatar: 'https://via.placeholder.com/70',
+        createdAt: '2024-01-02',
+        isActive: false,
+      },
+    ];
+  useEffect(() => {
+    setUser(mockUsers); // Gán dữ liệu mock vào state
+    setTotalPages(1); // Số trang giả lập
+  }, []);
   useEffect(() => {
     const fetchPro = async () => {
    //sua lại api khi có nhiều người dùng hơn
@@ -213,11 +239,11 @@ const resetSearch = async () => {
                 <td>{User.username}</td>
                 <td>{User.email}</td>
                 <td>{User.fullName}</td>
-                <td><img src={User.avatar}/></td>
+                <td><img style={{ width: '70px', height: '70px', objectFit: 'cover', margin: '5px' }} src={User.avatar}/></td>
                 <td>{User.createdAt}</td>
-                <td className="action-cell">
+                <td>
  
- <Space direction="vertical">
+ <Space direction="horizontal">
     <Switch value={User.isActive} onChange={ async () => {
                 const newStatus=!User.isActive
                  await fetch(server+`/user/9/status?isActive=${newStatus}`, {
