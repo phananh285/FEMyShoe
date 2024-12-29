@@ -18,13 +18,18 @@ const Login = () => {
       return;
     }
 
+
     // Xử lý logic đăng nhập ở đây (có thể gọi API)
     console.log('username:', username, 'Password:', password);
     try {
+      if (username != 'admin') {
+        throw e;
+      }
+      localStorage.clear();
       const response = await fetchAPI.post(API_URL, { username, password });
-      localStorage.setItem("token",response.token);
-      localStorage.setItem("user",JSON.stringify(response.user));
-      window.location.href="/";
+      localStorage.setItem("token", response.token);
+      localStorage.setItem("user", JSON.stringify(response.user));
+      window.location.href = "/demos/admin-templates/datta-able/react/free/ProductStat";
     } catch (e) {
       console.log(e);
       setErrorMessage('Thông tin đăng nhập không chính xác!');

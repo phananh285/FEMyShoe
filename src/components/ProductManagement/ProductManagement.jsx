@@ -20,7 +20,7 @@ const ProductManagement = () => {
   const [findName, setfindName] = useState('');
   const [pageSize, setPageSize] = useState(10); // Kích thước mặc định
 
-//Fake data
+  //Fake data
   const mockProducts = [
     {
       id: 1,
@@ -32,8 +32,8 @@ const ProductManagement = () => {
       price: 100000,
       images: [
         { url: 'src\\components\\ProductManagement\\2204-wallpaper-1600x900.jpg', isPrimary: true },
-        { url: 'src\\components\\ProductManagement\\2204-wallpaper-1600x900.jpg'},
-        { url: 'src\\components\\ProductManagement\\2204-wallpaper-1600x900.jpg'}
+        { url: 'src\\components\\ProductManagement\\2204-wallpaper-1600x900.jpg' },
+        { url: 'src\\components\\ProductManagement\\2204-wallpaper-1600x900.jpg' }
       ],
       variants: [
         {
@@ -65,12 +65,12 @@ const ProductManagement = () => {
       ],
     },
   ];
-  
+
   useEffect(() => {
     setProducts(mockProducts); // Gán dữ liệu mock vào state
     setTotalPages(1); // Số trang giả lập
   }, []);
-  
+
   useEffect(() => {
     const fetchPro = async () => {
 
@@ -302,7 +302,7 @@ const ProductManagement = () => {
               return (
                 <tr key={item.id}>
                   <td>{item.id}</td>
-                  <td>{item.price}</td>
+                  <td>{item.price.toLocaleString() + " đ"}</td>
                   <td>{item.stock}</td>
                   <td>
                     {primaryImage ? (
@@ -352,14 +352,14 @@ const ProductManagement = () => {
             </Button>
 
 
-  <Button 
-    className="ction-button reset-button"
-    type="default"
-    onClick={resetSearch} /* Gọi hàm reset */
-  >
-    Đặt lại
-  </Button>
-        
+            <Button
+              className="ction-button reset-button"
+              type="default"
+              onClick={resetSearch} /* Gọi hàm reset */
+            >
+              Đặt lại
+            </Button>
+
           </div>
         </div>
         {show && (

@@ -1,4 +1,4 @@
-import React, { useContext,useState } from 'react';
+import React, { useContext, useState } from 'react';
 
 import { ConfigContext } from '../../../contexts/ConfigContext';
 import useWindowSize from '../../../hooks/useWindowSize';
@@ -16,6 +16,7 @@ const Navigation = () => {
 
   const handleConfirmLogout = () => {
     // Thực hiện đăng xuất ở đây
+    window.location.href = "/";
     console.log('Đăng xuất thành công');
     setShowConfirm(false);
   };
@@ -23,7 +24,7 @@ const Navigation = () => {
   const handleCancelLogout = () => {
     setShowConfirm(false);
   };
-  
+
   const configContext = useContext(ConfigContext);
   const { collapseMenu } = configContext.state;
   const windowSize = useWindowSize();
@@ -65,7 +66,7 @@ const Navigation = () => {
         </div>
       )}
     </React.Fragment>
-    
+
   );
 };
 
