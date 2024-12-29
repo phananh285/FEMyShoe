@@ -18,12 +18,20 @@
 
 .order-status .success {
     color: green;
+    font-style: italic;
     /* Màu xanh lá cho trạng thái SUCCESS */
 }
 
 .order-status .pending {
     color: gold;
+    font-style: italic;
     /* Màu vàng cho trạng thái PENDING */
+}
+
+.order-status .paid {
+    color: #1e90ff; /* Màu xanh lam đậm */
+    font-style: italic; /* Thêm kiểu chữ nghiêng để nổi bật */
+  
 }
 
 .product-management {

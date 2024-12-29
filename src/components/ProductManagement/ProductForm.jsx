@@ -4,7 +4,7 @@ import { CloseOutlined, UploadOutlined, PlusOutlined, CheckCircleTwoTone } from 
 import { useEffect } from 'react';
 import axios from 'axios';
 import server from 'constant/linkapi';
-
+import "./Form.css"
 const ProductForm = ({ addProduct, show, setShow }) => {
   const [form] = Form.useForm();
   const [name, setName] = useState('');
@@ -238,6 +238,7 @@ const handleImageUpload = ({ fileList }) => {
               <div
                 key={image.id}
                 className="image-container"
+              
                 onMouseEnter={() => setHoveredImage(image.id)}
                 onMouseLeave={() => setHoveredImage(null)}
               >

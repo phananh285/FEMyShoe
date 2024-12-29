@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Modal, Table } from 'react-bootstrap';
-import { Form, Input, Collapse, Pagination } from 'antd';
+import {  Modal, Table } from 'react-bootstrap';
+import { Form, Input, Collapse, Pagination ,Button} from 'antd';
 import MainCard from '../Card/MainCard';
 import './ProductManagement.css';
 import ProductForm from './ProductForm.jsx';
@@ -20,56 +20,56 @@ const ProductManagement = () => {
   const [findName, setfindName] = useState('');
   const [pageSize, setPageSize] = useState(10); // Kích thước mặc định
 
-  //Fake data
-  const mockProducts = [
-    {
-      id: 1,
-      name: 'Sản phẩm A',
-      description: 'Mô tả sản phẩm A',
-      categoryId: 101,
-      createdAt: '2024-12-01',
-      updatedAt: '2024-12-10',
-      price: 100000,
-      images: [
-        { url: 'src\\components\\ProductManagement\\2204-wallpaper-1600x900.jpg', isPrimary: true },
-        { url: 'src\\components\\ProductManagement\\2204-wallpaper-1600x900.jpg' },
-        { url: 'src\\components\\ProductManagement\\2204-wallpaper-1600x900.jpg' }
-      ],
-      variants: [
-        {
-          id: 'VAR1',
-          price: 120000,
-          stock: 10,
-          attributes: { 'kích cỡ': 'L' },
-        },
-      ],
-    },
-    {
-      id: 2,
-      name: 'Sản phẩm B',
-      description: 'Mô tả sản phẩm B',
-      categoryId: 102,
-      createdAt: '2024-11-15',
-      updatedAt: '2024-12-05',
-      price: 200000,
-      images: [
-        { url: 'https://via.placeholder.com/50', isPrimary: true },
-      ],
-      variants: [
-        {
-          id: 'VAR2',
-          price: 220000,
-          stock: 5,
-          attributes: { 'kích cỡ': 'M' },
-        },
-      ],
-    },
-  ];
+  // //Fake data
+  // const mockProducts = [
+  //   {
+  //     id: 1,
+  //     name: 'Sản phẩm A',
+  //     description: "<section class=\"size-guide\"><div class=\"size-guide-container\"><h2 class=\"size-guide-title\">Hướng dẫn chọn size giày phù hợp</h2><p class=\"size-guide-description\">Việc chọn size giày phù hợp là rất quan trọng để đảm bảo sự thoải mái khi sử dụng. Dưới đây là hướng dẫn giúp bạn chọn đúng size giày:</p><div class=\"size-guide-image\"><img src=\"https://templates.mediamodifier.com/63ff3c773e8bc57b10ca810b/size-table-chart-template-for-shoes.jpg\" alt=\"Hướng dẫn đo size giày chính xác\" style=\"max-width: 100%; height: auto;\" /></div><div class=\"size-table\"><h3>Bảng size giày</h3><table border=\"1\" cellpadding=\"10\" cellspacing=\"0\"><thead><tr><th>Chiều dài chân (cm)</th><th>Size EU</th><th>Size US</th><th>Size UK</th></tr></thead><tbody><tr><td>22.0 - 22.5</td><td>35</td><td>5</td><td>4</td></tr><tr><td>22.6 - 23.0</td><td>36</td><td>6</td><td>5</td></tr><tr><td>23.1 - 23.5</td><td>37</td><td>6.5</td><td>5.5</td></tr><tr><td>23.6 - 24.0</td><td>38</td><td>7</td><td>6</td></tr><tr><td>24.1 - 24.5</td><td>39</td><td>8</td><td>7</td></tr><tr><td>24.6 - 25.0</td><td>40</td><td>8.5</td><td>7.5</td></tr></tbody></table></div><div class=\"size-guide-steps\"><h3>Cách đo chân để chọn size:</h3><ol><li>Đặt một tờ giấy lớn trên mặt phẳng.</li><li>Đặt chân lên tờ giấy và dùng bút đánh dấu đầu ngón chân dài nhất và gót chân.</li><li>Đo khoảng cách giữa hai điểm được đánh dấu.</li><li>Sử dụng bảng size để chọn kích thước phù hợp nhất.</li></ol></div>\r\n",
+  //     categoryId: 101,
+  //     createdAt: '2024-12-01',
+  //     updatedAt: '2024-12-10',
+  //     price: 100000,
+  //     images: [
+  //       { url: 'src\\components\\ProductManagement\\2204-wallpaper-1600x900.jpg', isPrimary: true },
+  //       { url: 'src\\components\\ProductManagement\\2204-wallpaper-1600x900.jpg' },
+  //       { url: 'src\\components\\ProductManagement\\2204-wallpaper-1600x900.jpg' }
+  //     ],
+  //     variants: [
+  //       {
+  //         id: 'VAR1',
+  //         price: 120000,
+  //         stock: 10,
+  //         attributes: { 'kích cỡ': 'L' },
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     id: 2,
+  //     name: 'Sản phẩm B',
+  //     description: 'Mô tả sản phẩm B',
+  //     categoryId: 102,
+  //     createdAt: '2024-11-15',
+  //     updatedAt: '2024-12-05',
+  //     price: 200000,
+  //     images: [
+  //       { url: 'https://via.placeholder.com/50', isPrimary: true },
+  //     ],
+  //     variants: [
+  //       {
+  //         id: 'VAR2',
+  //         price: 220000,
+  //         stock: 5,
+  //         attributes: { 'kích cỡ': 'M' },
+  //       },
+  //     ],
+  //   },
+  // ];
 
-  useEffect(() => {
-    setProducts(mockProducts); // Gán dữ liệu mock vào state
-    setTotalPages(1); // Số trang giả lập
-  }, []);
+  // useEffect(() => {
+  //   setProducts(mockProducts); // Gán dữ liệu mock vào state
+  //   setTotalPages(1); // Số trang giả lập
+  // }, []);
 
   useEffect(() => {
     const fetchPro = async () => {
@@ -197,7 +197,14 @@ const ProductManagement = () => {
   const handleShowModal = () => {
     setShow(true);
   };
+  // function stripHtml(html) {
+  //   return html
+  //     .replace(/<\/?[^>]+(>|$)/g, "..") // Thay thế toàn bộ thẻ HTML bằng ".."
+  //     .replace(/\s+/g, " ") // Loại bỏ khoảng trắng thừa
+  //     .trim(); // Loại bỏ khoảng trắng đầu và cuối
+  // }
 
+  
   const handleShowModalSua = (item) => {
     setShowSua(true);
     setSelectedProduct(item)
@@ -353,7 +360,7 @@ const ProductManagement = () => {
 
 
             <Button
-              className="ction-button reset-button"
+              className="action-button reset-button"
               type="default"
               onClick={resetSearch} /* Gọi hàm reset */
             >
@@ -390,7 +397,19 @@ const ProductManagement = () => {
             setPageSize(size);
             ChangePage(page, size);
           }}
-          showTotal={(total) => `Total ${total} items`}
+          showTotal={(total) => `Tổng cộng ${total} sản phẩm`}
+          locale={{
+            items_per_page: "sản phẩm / trang",
+            jump_to: "Đi tới",
+            jump_to_confirm: "Xác nhận",
+            page: "trang",
+            prev_page: "Trang trước",
+            next_page: "Trang tiếp",
+            prev_5: "Quay lại 5 trang",
+            next_5: "Tiến tới 5 trang",
+            prev_3: "Quay lại 3 trang",
+            next_3: "Tiến tới 3 trang",
+          }}
         />
 
       </div>

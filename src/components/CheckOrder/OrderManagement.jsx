@@ -22,43 +22,43 @@ const ProductManagement = () => {
     { id: 3, name: 'PAYMENT_CONFIRMED' }
   ]
   
-  //Fake data 
-  const mockData=  [{
-    id: 1,
-    user: {
-      fullName: "Nguyễn Văn A",
-      username: "nguyenvana",
-      email: "nguyenvana@example.com",
-    },
-    createdAt: "2024-12-24",
-    totalAmount: 500000,
-    payment: { status: "SUCCESS" },
-    status: "PENDING",
-    orderItems: [
-      { id: 101, quantity: 2, price: 100000, productId: "P001", code: "C001", status: "AVAILABLE" },
-      { id: 102, quantity: 1, price: 300000, productId: "P002", code: "C002", status: "AVAILABLE" },
-    ],
-  },
-  {
-    id: 2,
-    user: {
-      fullName: "Trần Thị B",
-      username: "tranthib",
-      email: "tranthib@example.com",
-    },
-    createdAt: "2024-12-23",
-    totalAmount: 250000,
-    payment: { status: "PENDING" },
-    status: "PAYMENT_CONFIRMED",
-    orderItems: [
-      { id: 201, quantity: 5, price: 50000, productId: "P003", code: "C003", status: "AVAILABLE" },
-    ],
-  },
-]
-  useEffect(() => {
-    setOrders(mockData); // Gán dữ liệu mock vào state
-    setTotalPages(1); // Số trang giả lập
-  }, []);
+//   //Fake data 
+//   const mockData=  [{
+//     id: 1,
+//     user: {
+//       fullName: "Nguyễn Văn A",
+//       username: "nguyenvana",
+//       email: "nguyenvana@example.com",
+//     },
+//     createdAt: "2024-12-24",
+//     totalAmount: 500000,
+//     payment: { status: "SUCCESS" },
+//     status: "PENDING",
+//     orderItems: [
+//       { id: 101, quantity: 2, price: 100000, productId: "P001", code: "C001", status: "SUCCESS" },
+//       { id: 102, quantity: 1, price: 300000, productId: "P002", code: "C002", status: "CANCEL" },
+//     ],
+//   },
+//   {
+//     id: 2,
+//     user: {
+//       fullName: "Trần Thị B",
+//       username: "tranthib",
+//       email: "tranthib@example.com",
+//     },
+//     createdAt: "2024-12-23",
+//     totalAmount: 250000,
+//     payment: { status: "PENDING" },
+//     status: "SUCCESS",
+//     orderItems: [
+//       { id: 201, quantity: 5, price: 50000, productId: "P003", code: "C003", status: "AVAILABLE" },
+//     ],
+//   },
+// ]
+//   useEffect(() => {
+//     setOrders(mockData); // Gán dữ liệu mock vào state
+//     setTotalPages(1); // Số trang giả lập
+//   }, []);
 
   const [Orders, setOrders] = useState([]);
   useEffect(() => {
@@ -186,23 +186,47 @@ const ProductManagement = () => {
           <p class="order-id-name">
             <strong><b>Mã đơn hàng:</b></strong> {Order.id} <span>|</span> <strong><b>Tên người nhận:</b></strong> {Order.user.fullName}
           </p>
-          <p class="order-username"><strong><b>Username:</b></strong> {Order.user.username} <span>|</span> <strong><b>Email:</b></strong> {Order.user.email} </p>
-          <p class={"order-status " + (Order.payment.status === 'SUCCESS' ? 'success' : 'pending')}>
-            <strong><b>Trạng thái đơn hàng:</b></strong> <div className='status'>{Order.status}</div> <span>|</span> <strong><b>Trạng thái thanh toán:</b></strong> {Order.payment.status}
+          <p class="order-username"><strong><b>Tên đăng nhập:</b></strong> {Order.user.username} <span>|</span> <strong><b>Email:</b></strong> {Order.user.email} </p>
+          <p class={"order-status "}>
+            <strong><b>Trạng thái đơn hàng: </b></strong> <span className='status'>
+            {Order.status=="SUCCESS" && (<span className='success' > Thành Công
+            </span>)}
+            {Order.status=="PENDING" && (<span className='pending' > Đang chờ
+  </span>)}
+  {Order.status=="PAYMENT_CONFIRMED" && (<span className='paid' > Đã thanh toán</span>)}
+            </span> <span>|</span> <strong><b>Trạng thái thanh toán: </b></strong> 
+            {Order.payment.status=='SUCCESS' && (<span className='success' > Thành Công
+              </span>)} 
+              {Order.payment.status=='PENDING' && (<span className='pending' > Đang chờ 
+                </span>)}
           </p>
           {/* <p class="order-dates">
     <strong><b>Ngày tạo:</b></strong> {Order.createdAt}
   </p> */}
           <p class="order-dates">
-            <strong><b>Ngày tạo:</b></strong>
-            <span class="date">{Order.createdAt.split(' ')[0]}</span>
+            <strong><b>Ngày tạo: </b></strong>
+            <span class="date">
+            {new Date(Order.createdAt).toLocaleTimeString('vi-VN', {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false,
+    })}, {new Date(Order.createdAt).toLocaleDateString('vi-VN', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    })} 
+   
+    
+
+            </span>
             <span class="time">{Order.createdAt.split(' ')[1]}</span>
           </p>
           <p class="order-amount"><strong><b>Tổng tiền:</b></strong> {Order.totalAmount.toLocaleString()} VND</p>
         </div>
         {Order.payment.status === 'SUCCESS' && Order.status !== 'SUCCESS' && (
           <Button variant="primary" onClick={() => Accept(Order.id)} >
-            Accept
+            Xác nhận
           </Button>
         )}
       </div>
@@ -217,7 +241,7 @@ const ProductManagement = () => {
               <th>Giá</th>
               <th>Mã sản phẩm</th>
               <th>Code</th>
-              <th>Trạng thái item</th>
+              <th>Trạng thái sản phẩm</th>
               <th>Trạng thái thanh toán tổng thể</th>
             </tr>
           </thead>
@@ -229,8 +253,12 @@ const ProductManagement = () => {
                 <td>{item.price}</td>
                 <td>{item.productId}</td>
                 <td>{item.code}</td>
-                <td>{item.status}</td>
-                <td>{Order.payment.status}</td>
+                <td>{item.status=="CANCEL" && "Hủy"}
+                  {item.status=="SUCCESS" && "Thành công"}
+                </td>
+                <td>{Order.payment.status=="PENDING" && "Đang chờ thanh toán"}
+                {Order.payment.status=="SUCCESS" && "Thành Công"}
+                </td>
               </tr>
             ))}
 
@@ -267,7 +295,9 @@ const ProductManagement = () => {
             >
               {selectedStatus.map((status) => (
                 <Option key={status.id} value={status.name}>
-                  {status.name}
+                  {status.id==1 && "Đang chờ"}
+                  {status.id==2 && "Thành công"}
+                  {status.id==3 && "Đã thanh toán"}
                 </Option>
               ))}
             </Select>
@@ -299,7 +329,19 @@ const ProductManagement = () => {
             setPageSize(size);
             ChangePage(page, size);
           }}
-          showTotal={(total) => `Total ${total} items`}
+          showTotal={(total) => `Tổng cộng ${total} đơn hàng`}
+          locale={{
+            items_per_page: "đơn hàng / trang",
+            jump_to: "Đi tới",
+            jump_to_confirm: "Xác nhận",
+            page: "trang",
+            prev_page: "Trang trước",
+            next_page: "Trang tiếp",
+            prev_5: "Quay lại 5 trang",
+            next_5: "Tiến tới 5 trang",
+            prev_3: "Quay lại 3 trang",
+            next_3: "Tiến tới 3 trang",
+          }}
         />
         <div className="product-management collapse-container" style={{ marginLeft: '0' }}>
           <Collapse items={items} />

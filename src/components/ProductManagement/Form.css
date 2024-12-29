@@ -1,7 +1,9 @@
 .image-container {
-    position: relative;
-    display: inline-block;
-    margin: 5px;
+  display: inline-block;
+  width: 100px; /* Chiều rộng của mỗi ảnh */
+  height: 100px; /* Chiều cao của mỗi ảnh */
+  margin-right: 10px; /* Khoảng cách giữa các ảnh */
+  position: relative;
   }
   
   .uploaded-image {

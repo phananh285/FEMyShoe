@@ -13,7 +13,7 @@ const menuItems = {
       children: [
         {
           id: 'auth',
-          title: 'Authentication',
+          title: 'Tài khoản',
           type: 'collapse',
           icon: 'feather icon-lock',
           badge: {

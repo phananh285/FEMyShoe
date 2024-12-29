@@ -193,7 +193,19 @@ const ProductManagement = () => {
             setPageSize(size);
             ChangePage(page, size);
           }}
-          showTotal={(total) => `Total ${total} items`}
+          showTotal={(total) => `Tổng cộng ${total} người dùng`}
+          locale={{
+            items_per_page: "người dùng / trang",
+            jump_to: "Đi tới",
+            jump_to_confirm: "Xác nhận",
+            page: "trang",
+            prev_page: "Trang trước",
+            next_page: "Trang tiếp",
+            prev_5: "Quay lại 5 trang",
+            next_5: "Tiến tới 5 trang",
+            prev_3: "Quay lại 3 trang",
+            next_3: "Tiến tới 3 trang",
+          }}
         />
         <Table responsive className="product-table">
           <thead>

@@ -4,6 +4,7 @@ import { CloseOutlined, UploadOutlined, PlusOutlined, CheckCircleTwoTone } from 
 import { useEffect } from 'react';
 import axios from 'axios';
 import server from 'constant/linkapi';
+import "./Form.css";
 const ProductForm = ({ UpdateProduct, showSua, setShowSua,selectedProduct }) => {
 
   const [form] = Form.useForm();
