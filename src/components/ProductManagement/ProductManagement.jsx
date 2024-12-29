@@ -203,7 +203,11 @@ const ProductManagement = () => {
   //     .replace(/\s+/g, " ") // Loại bỏ khoảng trắng thừa
   //     .trim(); // Loại bỏ khoảng trắng đầu và cuối
   // }
-
+  const parseHtmlToText = (htmlString) => {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(htmlString, 'text/html');
+    return doc.body.textContent || "";
+  };
   
   const handleShowModalSua = (item) => {
     setShowSua(true);
@@ -239,7 +243,7 @@ const ProductManagement = () => {
           <p class="product-id-name">
             <strong><b>Mã sản phẩm:</b></strong> {Order.id} <span>|</span> <strong><b>Tên sản phẩm:</b></strong> {Order.name}
           </p>
-          <p class="product-description"><strong><b>Mô tả:</b></strong> {Order.description}</p>
+          <p class="product-description"><strong><b>Mô tả:</b></strong> {parseHtmlToText(Order.description)}</p>
           <p class="product-category"><strong><b>Mã thể loại:</b></strong> {Order.categoryId}</p>
           <p class="product-dates">
             <strong><b>Ngày tạo: </b></strong> 
