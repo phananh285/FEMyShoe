@@ -4,6 +4,7 @@ import { Button, DatePicker, Select, Space, Table } from 'antd';
 import dayjs, { Dayjs } from 'dayjs';
 import { Line } from '@ant-design/plots';
 import server from 'constant/linkapi';
+import fetchAPI from 'views/auth/config/axiosConfig';
 const { RangePicker } = DatePicker;
 const RevenueChart = (revenueData3) => {
   const [frequency, setFrequency] = useState("MONTH");
@@ -12,19 +13,23 @@ const RevenueChart = (revenueData3) => {
   const [data, setData] = useState([]);
   const [productVariants, setProductVariants] = useState([]);
   const [load, setLoad] = useState(true);
+  const [Top, setTop] = useState(5);
   useEffect(() => {
     let linkAPI = server + `${statisticOption == "revenue" ? "/payment/statistic/revenue" : "/order/statistic/sold"}?from=${date[0].startOf(frequency.toLowerCase()).valueOf()}&to=${date[1].endOf(frequency.toLowerCase()).valueOf()}&frequency=${frequency}`;
     const callAPI = async () => {
-      const productVariantsResponse = await axios.get(server + "/order/statistic/best-sales");
-      setProductVariants(productVariantsResponse.data.data);
-      const response = await axios.get(linkAPI);
-      const dataResponse = response.data.data.data;
+      const productVariantsResponse = await fetchAPI.get(server + `/order/statistic/best-sales?from=${date[0].startOf(frequency.toLowerCase()).valueOf()}&to=${date[1].endOf(frequency.toLowerCase()).valueOf()}&top=${Top}`);
+   
+      setProductVariants(productVariantsResponse);
+      console.log("Thong ke data: ",productVariantsResponse);
+      // console.log("top 5 sp:", productVariantsResponse.data)
+      const response = await fetchAPI.get(linkAPI);
+      const dataResponse = response.data;
       setData(dataResponse)
-      console.log(response.data.data.data);
+      // console.log("Thong ke data: ",dataResponse)
     }
     callAPI();
   }, [load])
-  console.log(productVariants);
+  // console.log(productVariants);
 
   const frequencyOption = [
     {
@@ -48,6 +53,20 @@ const RevenueChart = (revenueData3) => {
     {
       label: "Số lượng bán ra",
       value: "sold"
+    }
+  ]
+  const Tops = [
+    {
+      label: "5",
+      value: 5
+    },
+    {
+      label: "10",
+      value: 10
+    },
+    {
+      label: "20",
+      value: 20
     }
   ]
   const handleChangeFrequency = (e) => {
@@ -105,38 +124,62 @@ const RevenueChart = (revenueData3) => {
           options={statisticOptions}
         />
       </Space>
+      <Space direction='vertical'>
+      Chọn thống kê theo top:
+        <Select
+          style={{ width: 200 }}
+          defaultValue={Tops}
+          onChange={(e) => setTop(e)}
+          options={Tops}
+        />
+      </Space>
+    
       <Button type='primary' onClick={() => setLoad(!load)}>Thống kê</Button>
     </Space>
     {data.length == 0 ? <div style={{ padding: "20px 0" }}>Không có dữ liệu</div> : <Line {...config} />}
-    <h5>TOP 5 Sản phẩm bán chạy nhất</h5>
-    <table>
+    <br/>
+
+    <h5>Top {Top} Sản phẩm bán chạy nhất</h5>
+
+    <table className="bordered table">
       <thead>
         <tr>
           <th>Số thứ tự</th>
-          <th className='text'>Mã sản phẩm phân loại</th>
-          <th>Thuộc sản phẩm Id</th>
-          <th>SkuCode</th>
+          <th className='text'>Mã sản phẩm</th>
+          <th className='text'>Tên sản phẩm</th>
           <th>Giá</th>
-          <th>Số lượng</th>
-          <th>Kích cỡ</th>
-          <th>Số lượt bán ra</th>
+      
+          <th>Số lượng bán ra</th>
         </tr>
       </thead>
       <tbody>
-        {productVariants?.map((item, index) => {
+        {/* {productVariants?.map((item, index) => {
           return (
             <tr key={item.id}>
               <td>{index + 1}</td>
               <td>{item.id}</td>
-              <td>{item.productId}</td>
-              <td>{item.skuCode}</td>
+              <td>{item.name}</td>
+   
               <td>{item.price.toLocaleString() + " đ"}</td>
-              <td>{item.stock}</td>
-              <td>{item.attributes["kích cỡ"]}</td>
+      
               <td>{item.sold}</td>
             </tr>
           );
-        })}
+        })} */}
+    {Array.from(Array(Top).keys()).map((index) => {
+          const item = productVariants[index];
+          return (
+            <tr key={item?.id}>
+              <td>{index + 1}</td>
+              <td>{item?.id}</td>
+              <td>{item?.name}</td>
+   
+              <td>{item&&item?.price.toLocaleString() + " đ"}</td>
+      
+              <td>{item?.sold}</td>
+            </tr>
+          );
+        })} 
       </tbody>
     </table>
 

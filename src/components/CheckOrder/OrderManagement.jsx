@@ -288,6 +288,7 @@ const ProductManagement = () => {
             <Select
               placeholder="Chọn trạng thái"
               value={findStatus}
+              placeholder="chọn tráng thái tìm kiếm"
               onChange={(value) => setfindStatus(value)}
               style={{ width: '200px' }} /* Đặt chiều rộng cho Select */
             >

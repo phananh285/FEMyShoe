@@ -7,9 +7,9 @@ import './ProductManagement.css';
 import { FaCalendarAlt } from 'react-icons/fa';
 import RevenueChart from 'components/RevenueChart';
 import { ConsoleSqlOutlined } from '@ant-design/icons';
-import TopProductsChart from 'components/TopProductChart';
+
 import PieChartProduct from 'components/PieChartProduct'
-import PieBasicChart from 'views/charts/nvd3-chart/chart/PieBasicChart';
+
 
 const ProductManagement = () => {
   const [showModal, setShowModal] = useState(false);
@@ -48,6 +48,7 @@ const ProductManagement = () => {
   return (
     <MainCard title="Thống kê">
       <RevenueChart />
+
     </MainCard>
   );
 };
