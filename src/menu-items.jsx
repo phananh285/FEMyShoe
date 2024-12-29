@@ -16,10 +16,7 @@ const menuItems = {
           title: 'Tài khoản',
           type: 'collapse',
           icon: 'feather icon-lock',
-          badge: {
-            title: 'New',
-            type: 'label-danger'
-          },
+     
           children: [
             {
               id: 'logout',

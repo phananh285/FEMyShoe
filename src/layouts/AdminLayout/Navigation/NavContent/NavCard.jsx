@@ -14,14 +14,8 @@ const NavCard = () => {
           <Card.Body className="p-2 text-center">
             <img src={sidebarImages} className="img-radius " alt="User-Profile" />
             <h5 className="text-white">MyShoes</h5>
-            <p className="text-white">Test</p>
-            <a
-              href=""
-              target={itemTarget}
-              className="btn text-white btn-primary"
-            >
-          
-            </a>
+            <p className="text-white"></p>
+     
           </Card.Body>
         </Card>
       </div>
