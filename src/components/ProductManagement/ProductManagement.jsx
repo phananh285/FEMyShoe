@@ -242,7 +242,28 @@ const ProductManagement = () => {
           <p class="product-description"><strong><b>Mô tả:</b></strong> {Order.description}</p>
           <p class="product-category"><strong><b>Mã thể loại:</b></strong> {Order.categoryId}</p>
           <p class="product-dates">
-            <strong><b>Ngày tạo:</b></strong> {Order.createdAt} <span>|</span> <strong><b>Ngày cập nhật:</b></strong> {Order.updatedAt}
+            <strong><b>Ngày tạo: </b></strong> 
+       {new Date(Order.createdAt).toLocaleTimeString('vi-VN', {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false,
+    })}, {new Date(Order.createdAt).toLocaleDateString('vi-VN', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    })}  <span>|</span> <strong><b>Ngày cập nhật: </b></strong> 
+    
+    {new Date(Order.createdAt).toLocaleTimeString('vi-VN', {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false,
+    })}, {new Date(Order.createdAt).toLocaleDateString('vi-VN', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    })} 
           </p>
           <p class="product-price"><strong><b>Giá:</b></strong> {Order.price.toLocaleString()} VND</p>
         </div>
@@ -254,6 +275,7 @@ const ProductManagement = () => {
             style={{ width: '50px', height: '50px', objectFit: 'cover', margin: '5px' }}
           />
         ))}
+        <div className='action-group'>
         <button
           className="edit-btn"
           onClick={() => handleShowModalSua(Order)} >
@@ -272,6 +294,8 @@ const ProductManagement = () => {
           <i className="feather icon-trash-2" />
           Xóa
         </button>
+        </div>
+      
         <Modal show={confirmDelete.show} onHide={() => setConfirmDelete({ show: false, productId: null })}>
           <Modal.Header closeButton>
             <Modal.Title>Xác nhận xóa</Modal.Title>

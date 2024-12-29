@@ -216,9 +216,7 @@ const ProductManagement = () => {
       month: '2-digit',
       year: 'numeric',
     })} 
-   
-    
-
+  
             </span>
             <span class="time">{Order.createdAt.split(' ')[1]}</span>
           </p>

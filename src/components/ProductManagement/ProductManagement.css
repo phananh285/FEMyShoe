@@ -142,5 +142,9 @@
     margin: 0;
   }
 
+.action-group{
+    display: flex;
+    align-items: center;
+}
 
   
